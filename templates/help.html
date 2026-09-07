@@ -29,112 +29,112 @@
 </style>
 
 <div class="help-hero">
-  <h1>Help &amp; User Guide</h1>
-  <p>Mauritius POS V3 — VAT-compliant point-of-sale system. Use the links below to jump to any section.</p>
+  <h1>Aide et guide utilisateur</h1>
+  <p>Mauritius POS V3 — système de caisse conforme à la TVA. Utilisez les liens ci-dessous pour aller directement à une section.</p>
 </div>
 
 <!-- Table of contents -->
 <div class="help-toc">
-  <a href="#section-sales">Sales &amp; POS</a>
-  <a href="#section-products">Products</a>
-  <a href="#section-purchases">Purchases</a>
+  <a href="#section-sales">Ventes &amp; caisse</a>
+  <a href="#section-products">Produits</a>
+  <a href="#section-purchases">Achats</a>
   <a href="#section-stock">Stock</a>
-  <a href="#section-float">Float</a>
-  <a href="#section-takings">Takings</a>
-  <a href="#section-reports">Reports</a>
-  <a href="#section-vat">VAT</a>
-  <a href="#section-barcodes">Barcodes</a>
+  <a href="#section-float">Fond de caisse</a>
+  <a href="#section-takings">Recettes</a>
+  <a href="#section-reports">Rapports</a>
+  <a href="#section-vat">TVA</a>
+  <a href="#section-barcodes">Codes-barres</a>
   {% if current_user.is_admin %}
-  <a href="#section-physical-stock">Physical Stock</a>
-  <a href="#section-database">Database</a>
-  <a href="#section-users">Users</a>
-  <a href="#section-audit">Audit Logs</a>
-  <a href="#section-email">Email Settings</a>
+  <a href="#section-physical-stock">Inventaire physique</a>
+  <a href="#section-database">Base de données</a>
+  <a href="#section-users">Utilisateurs</a>
+  <a href="#section-audit">Journal d'audit</a>
+  <a href="#section-email">Paramètres e-mail</a>
   {% endif %}
 </div>
 
 <!-- SALES -->
 <div class="help-section" id="section-sales">
-  <h2>Sales &amp; POS <span class="badge">All users</span></h2>
+  <h2>Ventes &amp; caisse <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Making a Sale</h3>
-      <p>Add items to the cart then finalise to generate a receipt.</p>
+      <h3>Effectuer une vente</h3>
+      <p>Ajoutez les articles au panier, puis finalisez pour générer un reçu.</p>
       <ul>
-        <li>Select a product from the dropdown <strong>or</strong> type / scan the SKU/barcode</li>
-        <li>Enter the quantity (defaults to 1)</li>
-        <li>Click <strong>Add to Cart</strong></li>
-        <li>Repeat for more items</li>
-        <li>Choose a <strong>Payment Method</strong>, enter a reference if required</li>
-        <li>Click <strong>Finalise Sale</strong></li>
+        <li>Sélectionnez un produit dans la liste <strong>ou</strong> saisissez / scannez le SKU ou code-barres</li>
+        <li>Saisissez la quantité (1 par défaut)</li>
+        <li>Cliquez sur <strong>Ajouter au panier</strong></li>
+        <li>Répétez l'opération pour ajouter d'autres articles</li>
+        <li>Choisissez un <strong>mode de paiement</strong> et saisissez une référence si nécessaire</li>
+        <li>Cliquez sur <strong>Finaliser la vente</strong></li>
       </ul>
-      <a class="btn-link" href="/sales">Go to Sales</a>
+      <a class="btn-link" href="/sales">Aller aux ventes</a>
     </div>
     <div class="help-card">
-      <h3>Cart Management</h3>
-      <p>Review and adjust items before finalising.</p>
+      <h3>Gestion du panier</h3>
+      <p>Vérifiez et ajustez les articles avant de finaliser.</p>
       <ul>
-        <li>The cart shows each item, qty, unit price and line total</li>
-        <li>Use <strong>Remove</strong> next to an item to delete it from the cart</li>
-        <li>Use <strong>Clear Cart</strong> to start over</li>
-        <li>Output VAT is calculated automatically per item based on its VAT category</li>
+        <li>Le panier affiche chaque article, la quantité, le prix unitaire et le total de la ligne</li>
+        <li>Utilisez <strong>Retirer</strong> à côté d'un article pour le supprimer du panier</li>
+        <li>Utilisez <strong>Vider le panier</strong> pour recommencer</li>
+        <li>La TVA sortante est calculée automatiquement pour chaque article selon sa catégorie TVA</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Payment Methods Supported</h3>
+      <h3>Modes de paiement acceptés</h3>
       <ul>
-        <li>Cash</li>
-        <li>Credit Card (MCB, SBM, MauBank, AfrAsia)</li>
+        <li>Espèces</li>
+        <li>Carte de crédit (MCB, SBM, MauBank, AfrAsia)</li>
         <li>JuiceApp</li>
         <li>Blink</li>
         <li>MyT Money</li>
-        <li>Other (with optional reference)</li>
+        <li>Autre (avec référence facultative)</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Receipts</h3>
-      <p>A full receipt is generated after every sale.</p>
+      <h3>Reçus</h3>
+      <p>Un reçu complet est généré après chaque vente.</p>
       <ul>
-        <li>Shows all items, VAT breakdown, payment method</li>
-        <li>Can be printed directly from the browser</li>
-        <li>Accessible later from the Sales history list</li>
+        <li>Affiche tous les articles, le détail de la TVA et le mode de paiement</li>
+        <li>Peut être imprimé directement depuis le navigateur</li>
+        <li>Accessible ensuite depuis l'historique des ventes</li>
       </ul>
     </div>
   </div>
-  <div class="help-tip"><strong>Tip:</strong> Scan a barcode with a USB scanner — it populates the SKU field automatically without any extra software.</div>
+  <div class="help-tip"><strong>Conseil :</strong> Scannez un code-barres avec un lecteur USB : le champ SKU est rempli automatiquement, sans logiciel supplémentaire.</div>
 </div>
 
 <!-- PRODUCTS -->
 <div class="help-section" id="section-products">
-  <h2>Products <span class="badge">All users (edit: Admin)</span></h2>
+  <h2>Produits <span class="badge">Tous les utilisateurs (modification : administrateur)</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Adding a Product</h3>
+      <h3>Ajouter un produit</h3>
       <ul>
-        <li><strong>SKU</strong> — unique barcode or internal code</li>
-        <li><strong>Name</strong> — product description</li>
-        <li><strong>Brand / Lodgement</strong> — optional fields</li>
-        <li><strong>VAT Category</strong> — Standard (15%), Zero-rated (0%), Exempt</li>
-        <li><strong>Cost Price</strong> — purchase cost per unit</li>
-        <li><strong>Selling Price</strong> — retail price (inclusive of VAT)</li>
-        <li><strong>Low Stock Level</strong> — warning threshold</li>
+        <li><strong>SKU</strong> — code-barres unique ou code interne</li>
+        <li><strong>Nom</strong> — description du produit</li>
+        <li><strong>Marque / Conditionnement</strong> — champs facultatifs</li>
+        <li><strong>Catégorie TVA</strong> — Standard (15 %), Taux zéro (0 %), Exonéré</li>
+        <li><strong>Prix d'achat</strong> — coût d'achat par unité</li>
+        <li><strong>Prix de vente</strong> — prix de détail (TVA incluse)</li>
+        <li><strong>Niveau de stock faible</strong> — seuil d'alerte</li>
       </ul>
-      <a class="btn-link" href="/products">Go to Products</a>
+      <a class="btn-link" href="/products">Aller aux produits</a>
     </div>
     <div class="help-card">
-      <h3>Editing &amp; Deleting</h3>
-      <p>Admins can edit any product at any time. Deletion is only permitted for products with <strong>no sales or purchase history</strong> to preserve data integrity.</p>
+      <h3>Modification et suppression</h3>
+      <p>Les administrateurs peuvent modifier tout produit à tout moment. La suppression n'est autorisée que pour les produits <strong>sans historique de vente ou d'achat</strong>, afin de préserver l'intégrité des données.</p>
       <ul>
-        <li>Products with history show "Cannot delete (has history)"</li>
-        <li>Edit is always available for admins</li>
+        <li>Les produits avec historique affichent « Suppression impossible (historique existant) »</li>
+        <li>La modification est toujours disponible pour les administrateurs</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>VAT Categories</h3>
+      <h3>Catégories TVA</h3>
       <ul>
-        <li><strong>Standard</strong> — 15% Mauritius VAT applied on sales</li>
-        <li><strong>Zero-rated</strong> — taxable but at 0% (e.g., exports). Input VAT still recoverable</li>
-        <li><strong>Exempt</strong> — no VAT charged; input VAT not recoverable</li>
+        <li><strong>Standard</strong> — TVA mauricienne de 15 % appliquée aux ventes</li>
+        <li><strong>Taux zéro</strong> — imposable à 0 % (ex. exportations). La TVA déductible reste récupérable</li>
+        <li><strong>Exonéré</strong> — aucune TVA facturée ; TVA déductible non récupérable</li>
       </ul>
     </div>
   </div>
@@ -142,26 +142,26 @@
 
 <!-- PURCHASES -->
 <div class="help-section" id="section-purchases">
-  <h2>Purchases <span class="badge">All users</span></h2>
+  <h2>Achats <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Recording a Purchase</h3>
-      <p>Use this page to receive stock into the system.</p>
+      <h3>Enregistrer un achat</h3>
+      <p>Utilisez cette page pour réceptionner du stock dans le système.</p>
       <ul>
-        <li>Select the product and enter quantity received</li>
-        <li>Enter <strong>Unit Cost</strong> (defaults to product cost price)</li>
-        <li>Fill in supplier details, invoice number and expiry date</li>
-        <li>Input VAT is auto-calculated for Standard and Zero-rated products</li>
+        <li>Sélectionnez le produit et saisissez la quantité reçue</li>
+        <li>Saisissez le <strong>coût unitaire</strong> (prix d'achat du produit par défaut)</li>
+        <li>Renseignez les informations du fournisseur, le numéro de facture et la date d'expiration</li>
+        <li>La TVA déductible est calculée automatiquement pour les produits standard et à taux zéro</li>
       </ul>
-      <a class="btn-link" href="/purchases">Go to Purchases</a>
+      <a class="btn-link" href="/purchases">Aller aux achats</a>
     </div>
     <div class="help-card">
-      <h3>Fields Explained</h3>
+      <h3>Explication des champs</h3>
       <ul>
-        <li><strong>Amount Ex-VAT</strong> — purchase cost before VAT</li>
-        <li><strong>VAT Amount</strong> — input VAT (15% for Standard/Zero)</li>
-        <li><strong>Total incl. VAT</strong> — full invoice value</li>
-        <li><strong>Input VAT</strong> — recorded for your VAT return</li>
+        <li><strong>Montant HT</strong> — coût d'achat avant TVA</li>
+        <li><strong>Montant TVA</strong> — TVA déductible (15 % pour Standard/Taux zéro)</li>
+        <li><strong>Total TTC</strong> — valeur totale de la facture</li>
+        <li><strong>TVA déductible</strong> — enregistrée pour votre déclaration TVA</li>
       </ul>
     </div>
   </div>
@@ -169,46 +169,46 @@
 
 <!-- STOCK -->
 <div class="help-section" id="section-stock">
-  <h2>Stock <span class="badge">All users</span></h2>
+  <h2>Stock <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>How Stock Is Calculated</h3>
-      <p>Stock level = total purchases received minus total units sold, for each product.</p>
+      <h3>Calcul du stock</h3>
+      <p>Niveau de stock = total des achats reçus moins le total des unités vendues, pour chaque produit.</p>
       <ul>
-        <li>Rows highlighted in <strong style="color:orange;">amber</strong> are at or below the low-stock threshold</li>
-        <li>Rows highlighted in <strong style="color:red;">red</strong> are negative (oversold)</li>
-        <li>Stock value shown at cost price</li>
+        <li>Les lignes en <strong style="color:orange;">orange</strong> sont au niveau ou sous le seuil de stock faible</li>
+        <li>Les lignes en <strong style="color:red;">rouge</strong> sont négatives (survente)</li>
+        <li>La valeur du stock est affichée au prix d'achat</li>
       </ul>
-      <a class="btn-link" href="/stock">Go to Stock</a>
+      <a class="btn-link" href="/stock">Aller au stock</a>
     </div>
     <div class="help-card">
-      <h3>Low Stock Alerts</h3>
-      <p>Each product has a configurable <strong>Low Stock Level</strong> set in the Products page. When stock falls to or below that level the dashboard and stock page will flag it.</p>
+      <h3>Alertes de stock faible</h3>
+      <p>Chaque produit a un <strong>niveau de stock faible</strong> configurable dans la page Produits. Lorsque le stock atteint ou passe sous ce niveau, le tableau de bord et la page Stock le signalent.</p>
     </div>
   </div>
 </div>
 
 <!-- FLOAT -->
 <div class="help-section" id="section-float">
-  <h2>Float Management <span class="badge">All users</span></h2>
+  <h2>Gestion du fond de caisse <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Opening a Float</h3>
-      <p>Start each shift by recording the cash float in the till.</p>
+      <h3>Ouvrir un fond de caisse</h3>
+      <p>Commencez chaque service en enregistrant le fond de caisse dans la caisse.</p>
       <ul>
-        <li>Enter the opening cash amount</li>
-        <li>Click <strong>Open Float</strong></li>
-        <li>Only one float session can be open at a time per cashier</li>
+        <li>Saisissez le montant d'ouverture</li>
+        <li>Cliquez sur <strong>Ouvrir le fond de caisse</strong></li>
+        <li>Un seul fond de caisse peut être ouvert à la fois par caissier</li>
       </ul>
-      <a class="btn-link" href="/float">Go to Float</a>
+      <a class="btn-link" href="/float">Aller au fond de caisse</a>
     </div>
     <div class="help-card">
-      <h3>Closing a Float</h3>
-      <p>At end of shift, count the cash and record the closing amount.</p>
+      <h3>Fermer un fond de caisse</h3>
+      <p>À la fin du service, comptez les espèces et enregistrez le montant de clôture.</p>
       <ul>
-        <li>Enter the closing cash amount</li>
-        <li>Click <strong>Close Float</strong></li>
-        <li>The difference between opening and closing is shown in history</li>
+        <li>Saisissez le montant des espèces à la clôture</li>
+        <li>Cliquez sur <strong>Fermer le fond de caisse</strong></li>
+        <li>La différence entre l'ouverture et la clôture est affichée dans l'historique</li>
       </ul>
     </div>
   </div>
@@ -216,117 +216,117 @@
 
 <!-- TAKINGS -->
 <div class="help-section" id="section-takings">
-  <h2>Cash Takings <span class="badge">All users</span></h2>
+  <h2>Recettes <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Daily Takings View</h3>
-      <p>Summary of all receipts for a given day, broken down by payment method.</p>
+      <h3>Vue des recettes quotidiennes</h3>
+      <p>Résumé de tous les reçus d'une journée, ventilé par mode de paiement.</p>
       <ul>
-        <li>Filter by date and (admins only) by cashier</li>
-        <li>See subtotal, output VAT and total per payment type</li>
-        <li>Full receipt list below with links to individual receipts</li>
+        <li>Filtrez par date et, pour les administrateurs, par caissier</li>
+        <li>Consultez le sous-total, la TVA sortante et le total par mode de paiement</li>
+        <li>La liste complète des reçus avec des liens individuels apparaît ci-dessous</li>
       </ul>
-      <a class="btn-link" href="/takings">Go to Takings</a>
+      <a class="btn-link" href="/takings">Aller aux recettes</a>
     </div>
   </div>
 </div>
 
 <!-- REPORTS -->
 <div class="help-section" id="section-reports">
-  <h2>Reports <span class="badge">All users</span></h2>
+  <h2>Rapports <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Date-Range Filtering</h3>
-      <p>Set a From and To date at the top of the Reports page to scope all four report sections.</p>
-      <a class="btn-link" href="/reports">Go to Reports</a>
+      <h3>Filtrage par période</h3>
+      <p>Définissez les dates De et À en haut de la page Rapports pour filtrer les quatre sections de rapport.</p>
+      <a class="btn-link" href="/reports">Aller aux rapports</a>
     </div>
     <div class="help-card">
-      <h3>Sales Report</h3>
+      <h3>Rapport des ventes</h3>
       <ul>
-        <li>Units sold per product, gross revenue, output VAT, net revenue</li>
-        <li>Totals: receipt count, units, revenue, VAT</li>
-        <li>Export to CSV or Save &amp; Email</li>
+        <li>Unités vendues par produit, revenu brut, TVA sortante, revenu net</li>
+        <li>Totaux : nombre de reçus, unités, revenu, TVA</li>
+        <li>Exportez en CSV ou enregistrez et envoyez par e-mail</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Purchases Report</h3>
+      <h3>Rapport des achats</h3>
       <ul>
-        <li>Units received per product per supplier</li>
-        <li>Amount ex-VAT, input VAT, total incl. VAT</li>
-        <li>Export to CSV or Save &amp; Email</li>
+        <li>Unités reçues par produit et par fournisseur</li>
+        <li>Montant HT, TVA déductible, total TTC</li>
+        <li>Exportez en CSV ou enregistrez et envoyez par e-mail</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Stock Report (Period)</h3>
+      <h3>Rapport de stock (période)</h3>
       <ul>
-        <li>Opening stock (start of period), receipts, sales, closing stock</li>
-        <li>Values at cost price for opening and closing</li>
-        <li>Low-stock and negative-stock indicators</li>
-        <li>Export to CSV</li>
+        <li>Stock d'ouverture, réceptions, ventes et stock de clôture</li>
+        <li>Valeurs au prix d'achat pour l'ouverture et la clôture</li>
+        <li>Indicateurs de stock faible et de stock négatif</li>
+        <li>Exportez en CSV</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Cash Takings Report</h3>
+      <h3>Rapport des recettes</h3>
       <ul>
-        <li>Breakdown by payment method for the selected period</li>
-        <li>Receipt count, net, VAT, gross totals</li>
-        <li>% share of each payment method</li>
-        <li>Export to CSV or Save &amp; Email</li>
+        <li>Ventilation par mode de paiement pour la période sélectionnée</li>
+        <li>Nombre de reçus, totaux net, TVA et brut</li>
+        <li>Part en % de chaque mode de paiement</li>
+        <li>Exportez en CSV ou enregistrez et envoyez par e-mail</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Save &amp; Email Reports</h3>
-      <p>Click <strong>Save &amp; Email</strong> on any report to:</p>
+      <h3>Enregistrer et envoyer les rapports</h3>
+      <p>Cliquez sur <strong>Enregistrer et e-mail</strong> sur un rapport pour :</p>
       <ul>
-        <li>Save a timestamped CSV copy to the <code>reports/</code> folder on the server</li>
-        <li>Optionally email the CSV to any address</li>
+        <li>Enregistrer une copie CSV horodatée dans le dossier <code>reports/</code> du serveur</li>
+        <li>Envoyer facultativement le CSV à une adresse e-mail</li>
       </ul>
-      <p>Email must be configured in <strong>Email Settings</strong> first.</p>
+      <p>L'e-mail doit d'abord être configuré dans les <strong>Paramètres e-mail</strong>.</p>
     </div>
   </div>
 </div>
 
 <!-- VAT -->
 <div class="help-section" id="section-vat">
-  <h2>VAT Summary <span class="badge">All users</span></h2>
+  <h2>Résumé TVA <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>VAT Calculation</h3>
-      <p>Mauritius VAT apportionment is applied automatically:</p>
+      <h3>Calcul de la TVA</h3>
+      <p>La répartition de la TVA mauricienne est appliquée automatiquement :</p>
       <ul>
-        <li><strong>Output VAT</strong> — collected on Standard-rated sales</li>
-        <li><strong>Input VAT (raw)</strong> — paid on all purchases</li>
-        <li><strong>Apportionment ratio</strong> — taxable sales ÷ total sales</li>
-        <li><strong>Adjusted Input VAT</strong> — raw input VAT × apportionment ratio</li>
-        <li><strong>VAT Payable</strong> — Output VAT − Adjusted Input VAT</li>
+        <li><strong>TVA sortante</strong> — collectée sur les ventes au taux standard</li>
+        <li><strong>TVA déductible brute</strong> — payée sur tous les achats</li>
+        <li><strong>Ratio de répartition</strong> — ventes imposables ÷ total des ventes</li>
+        <li><strong>TVA déductible ajustée</strong> — TVA déductible brute × ratio de répartition</li>
+        <li><strong>TVA à payer</strong> — TVA sortante − TVA déductible ajustée</li>
       </ul>
-      <a class="btn-link" href="/vat">Go to VAT</a>
+      <a class="btn-link" href="/vat">Aller à la TVA</a>
     </div>
   </div>
 </div>
 
 <!-- BARCODES -->
 <div class="help-section" id="section-barcodes">
-  <h2>Barcodes <span class="badge">All users</span></h2>
+  <h2>Codes-barres <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Generating Barcodes</h3>
-      <p>A Code 128 barcode image is generated for every product based on its SKU.</p>
+      <h3>Générer des codes-barres</h3>
+      <p>Une image de code-barres Code 128 est générée pour chaque produit à partir de son SKU.</p>
       <ul>
-        <li>Go to <strong>Barcodes</strong> to see all products</li>
-        <li>Click <strong>Download</strong> to save a PNG barcode image for printing</li>
+        <li>Accédez aux <strong>Codes-barres</strong> pour voir tous les produits</li>
+        <li>Cliquez sur <strong>Télécharger</strong> pour enregistrer une image PNG à imprimer</li>
       </ul>
-      <a class="btn-link" href="/barcodes">Go to Barcodes</a>
+      <a class="btn-link" href="/barcodes">Aller aux codes-barres</a>
     </div>
     <div class="help-card">
-      <h3>Barcode Decoder</h3>
-      <p>Upload an image of a barcode to look up the product.</p>
+      <h3>Décodeur de codes-barres</h3>
+      <p>Téléversez une image de code-barres pour rechercher le produit.</p>
       <ul>
-        <li>Requires pyzbar library to be installed</li>
-        <li>Supports JPG, PNG, and most common image formats</li>
-        <li>Returns matching product name, category, and price</li>
+        <li>Nécessite l'installation de la bibliothèque pyzbar</li>
+        <li>Prend en charge JPG, PNG et les formats d'image courants</li>
+        <li>Retourne le nom, la catégorie et le prix du produit correspondant</li>
       </ul>
-      <a class="btn-link" href="/barcode-decoder">Go to Decoder</a>
+      <a class="btn-link" href="/barcode-decoder">Aller au décodeur</a>
     </div>
   </div>
 </div>
@@ -336,53 +336,53 @@
 
 <!-- PHYSICAL STOCK -->
 <div class="help-section" id="section-physical-stock">
-  <h2>Physical Stock Take <span class="badge admin">Admin only</span></h2>
+  <h2>Inventaire physique <span class="badge admin">Administrateur uniquement</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Conducting a Count</h3>
-      <p>Enter the actual physical quantities counted in the warehouse/shop floor.</p>
+      <h3>Effectuer un comptage</h3>
+      <p>Saisissez les quantités physiques réellement comptées dans l'entrepôt ou le magasin.</p>
       <ul>
-        <li>Select the count date (defaults to today)</li>
-        <li>For each product, enter the physically counted quantity</li>
-        <li>Variance (Physical − Ledger) is calculated in real-time</li>
-        <li>Green = overage, Red = shortage</li>
-        <li>Add notes for any damaged or expired items</li>
-        <li>Click <strong>Save Stock Count</strong></li>
+        <li>Sélectionnez la date de comptage (date du jour par défaut)</li>
+        <li>Pour chaque produit, saisissez la quantité physiquement comptée</li>
+        <li>L'écart (physique − grand livre) est calculé en temps réel</li>
+        <li>Vert = excédent, rouge = manque</li>
+        <li>Ajoutez des notes pour les articles endommagés ou expirés</li>
+        <li>Cliquez sur <strong>Enregistrer l'inventaire</strong></li>
       </ul>
-      <a class="btn-link" href="/physical-stock-take">Go to Stock Take</a>
+      <a class="btn-link" href="/physical-stock-take">Aller à l'inventaire</a>
     </div>
     <div class="help-card">
-      <h3>Stock Variance Report</h3>
-      <p>Compare physical counts against the system ledger for a specific date.</p>
+      <h3>Rapport d'écarts de stock</h3>
+      <p>Comparez les comptages physiques avec le grand livre du système pour une date donnée.</p>
       <ul>
-        <li>Select a count date to see the variance analysis</li>
-        <li>Shows Overage / Shortage / Exact for each product</li>
-        <li>Total variance in quantity and value</li>
-        <li>Summary boxes for overages vs shortages</li>
+        <li>Sélectionnez une date de comptage pour voir l'analyse des écarts</li>
+        <li>Affiche Excédent / Manque / Exact pour chaque produit</li>
+        <li>Écart total en quantité et en valeur</li>
+        <li>Encadrés récapitulatifs des excédents et manques</li>
       </ul>
-      <a class="btn-link" href="/stock-variance">Go to Variance</a>
+      <a class="btn-link" href="/stock-variance">Aller aux écarts</a>
     </div>
   </div>
-  <div class="help-tip"><strong>Tip:</strong> Run a stock take at the end of each month and compare to the Stock Report to identify shrinkage or data-entry errors.</div>
+  <div class="help-tip"><strong>Conseil :</strong> Faites un inventaire à la fin de chaque mois et comparez-le au rapport de stock pour repérer les pertes ou erreurs de saisie.</div>
 </div>
 
 <!-- DATABASE -->
 <div class="help-section" id="section-database">
-  <h2>Database Maintenance <span class="badge admin">Admin only</span></h2>
+  <h2>Maintenance de la base de données <span class="badge admin">Administrateur uniquement</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Database Backup</h3>
-      <p>Creates a timestamped ZIP archive of the SQLite database.</p>
+      <h3>Sauvegarde de la base de données</h3>
+      <p>Crée une archive ZIP horodatée de la base de données SQLite.</p>
       <ul>
-        <li>Click <strong>Download Backup</strong> to download the ZIP</li>
-        <li>Backups are also stored in the <code>backups/</code> folder on the server</li>
-        <li>An automated backup email is sent daily at 2:00 AM (if email is configured)</li>
+        <li>Cliquez sur <strong>Télécharger la sauvegarde</strong> pour télécharger le ZIP</li>
+        <li>Les sauvegardes sont aussi stockées dans le dossier <code>backups/</code> du serveur</li>
+        <li>Un e-mail de sauvegarde automatisée est envoyé chaque jour à 2 h 00 (si l'e-mail est configuré)</li>
       </ul>
-      <a class="btn-link" href="/database-maintenance">Go to Maintenance</a>
+      <a class="btn-link" href="/database-maintenance">Aller à la maintenance</a>
     </div>
     <div class="help-card">
-      <h3>Purge Old Records</h3>
-      <p>Delete audit log entries older than a specified number of days to reduce database size.</p>
+      <h3>Purger les anciens enregistrements</h3>
+      <p>Supprimez les entrées du journal d'audit antérieures à un nombre de jours défini pour réduire la taille de la base.</p>
       <ul>
         <li>Default: records older than 365 days</li>
         <li>Sales, purchases and stock data are <strong>never</strong> purged — only audit logs</li>
@@ -398,27 +398,27 @@
 
 <!-- USERS -->
 <div class="help-section" id="section-users">
-  <h2>User Management <span class="badge admin">Admin only</span></h2>
+  <h2>Gestion des utilisateurs <span class="badge admin">Administrateur uniquement</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Creating Users</h3>
+      <h3>Créer des utilisateurs</h3>
       <ul>
         <li>Username must be unique</li>
         <li>Password must be at least 6 characters</li>
         <li>Tick <strong>Admin</strong> to grant admin access</li>
         <li>Non-admin users are cashiers with limited access</li>
       </ul>
-      <a class="btn-link" href="/users">Go to Users</a>
+      <a class="btn-link" href="/users">Aller aux utilisateurs</a>
     </div>
     <div class="help-card">
-      <h3>Admin vs Cashier</h3>
+      <h3>Administrateur ou caissier</h3>
       <ul>
         <li><strong>Cashier</strong> — Sales, Purchases, Stock, VAT, Float, Takings, Reports, Barcodes</li>
         <li><strong>Admin</strong> — All cashier access + Product edit/delete, Users, Physical Stock, Database, Email Settings, Audit Logs</li>
       </ul>
     </div>
     <div class="help-card">
-      <h3>Resetting Passwords &amp; Status</h3>
+      <h3>Réinitialisation des mots de passe et statut</h3>
       <ul>
         <li>Admins can reset any user's password</li>
         <li>Admins can enable/disable user accounts</li>
@@ -431,11 +431,11 @@
 
 <!-- AUDIT LOGS -->
 <div class="help-section" id="section-audit">
-  <h2>Audit Logs <span class="badge admin">Admin only</span></h2>
+  <h2>Journaux d'audit <span class="badge admin">Administrateur uniquement</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>What Is Logged</h3>
-      <p>All significant actions are logged automatically, including:</p>
+      <h3>Éléments enregistrés</h3>
+      <p>Toutes les actions importantes sont enregistrées automatiquement, notamment :</p>
       <ul>
         <li>User logins and logouts</li>
         <li>Password changes and resets</li>
@@ -445,29 +445,29 @@
         <li>Email settings changes</li>
         <li>Report saves</li>
       </ul>
-      <a class="btn-link" href="/audit-logs">Go to Audit Logs</a>
+      <a class="btn-link" href="/audit-logs">Aller aux journaux d'audit</a>
     </div>
   </div>
 </div>
 
 <!-- EMAIL SETTINGS -->
 <div class="help-section" id="section-email">
-  <h2>Email Settings <span class="badge admin">Admin only</span></h2>
+  <h2>Paramètres e-mail <span class="badge admin">Administrateur uniquement</span></h2>
   <div class="help-cards">
     <div class="help-card">
       <h3>Configuration</h3>
-      <p>Enter your SMTP email server details to enable email features.</p>
+      <p>Saisissez les détails de votre serveur e-mail SMTP pour activer les fonctions e-mail.</p>
       <ul>
         <li><strong>SMTP Server</strong> — e.g. <code>smtp.gmail.com</code></li>
         <li><strong>SMTP Port</strong> — typically <code>587</code> (TLS) or <code>465</code> (SSL)</li>
         <li><strong>Sender Email</strong> — the address emails are sent from</li>
         <li><strong>Password</strong> — use an App Password for Gmail (not your main password)</li>
       </ul>
-      <a class="btn-link" href="/settings/email">Go to Email Settings</a>
+      <a class="btn-link" href="/settings/email">Aller aux paramètres e-mail</a>
     </div>
     <div class="help-card">
-      <h3>Automated Daily Backups</h3>
-      <p>Enter comma-separated recipient addresses in the <strong>Backup Recipients</strong> field. The system will email the database backup every day at 2:00 AM.</p>
+      <h3>Sauvegardes quotidiennes automatisées</h3>
+      <p>Saisissez les adresses des destinataires séparées par des virgules dans le champ <strong>Destinataires de la sauvegarde</strong>. Le système enverra la sauvegarde de la base chaque jour à 2 h 00.</p>
     </div>
     <div class="help-card">
       <h3>Gmail Setup</h3>
@@ -486,16 +486,16 @@
 
 <!-- Account -->
 <div class="help-section">
-  <h2>Your Account <span class="badge">All users</span></h2>
+  <h2>Votre compte <span class="badge">Tous les utilisateurs</span></h2>
   <div class="help-cards">
     <div class="help-card">
-      <h3>Changing Your Password</h3>
+      <h3>Modifier votre mot de passe</h3>
       <ul>
-        <li>Go to <strong>Account</strong> in the navigation</li>
-        <li>Enter your current password</li>
-        <li>Enter and confirm your new password (min. 6 characters)</li>
+        <li>Accédez à <strong>Compte</strong> dans la navigation</li>
+        <li>Saisissez votre mot de passe actuel</li>
+        <li>Saisissez et confirmez votre nouveau mot de passe (6 caractères minimum)</li>
       </ul>
-      <a class="btn-link" href="/account">Go to Account</a>
+      <a class="btn-link" href="/account">Aller au compte</a>
     </div>
   </div>
 </div>

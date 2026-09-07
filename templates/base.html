@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>Mauritius POS V3</title>
+    <title>POS V3</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=dashboard-fit-20260713">
 </head>
@@ -14,7 +14,7 @@
             <div class="brand-mark">J</div>
             <div>
                 <h1>JOSEA OUTSOURCING LTD</h1>
-                <p>Mauritius VAT + Stock</p>
+                <p>VAT & Stock Management</p>
             </div>
         </div>
         <div class="user-card">
@@ -22,84 +22,84 @@
             <div>
                 <strong>{{ current_user.full_name }}</strong>
                 <label class="background-picker" for="background-choice">
-                    <span>Background</span>
-                    <select id="background-choice" aria-label="Choose background color">
-                        <option value="white">White</option>
-                        <option value="black">Black</option>
-                        <option value="green">Green</option>
-                        <option value="blue">Blue</option>
+                    <span>Arrière-plan</span>
+                    <select id="background-choice" aria-label="Choisir la couleur de l'arrière-plan">
+                        <option value="white">Blanc</option>
+                        <option value="black">Noir</option>
+                        <option value="green">Vert</option>
+                        <option value="blue">Bleu</option>
                     </select>
                 </label>
-                <span>{{ current_user.username }} Â· Online</span>
+                <span>{{ current_user.username }} · En ligne</span>
             </div>
         </div>
         <nav class="side-nav">
-            <span class="nav-section">Main</span>
+            <span class="nav-section">Principal</span>
             {% if current_user.is_admin %}
-            <a class="{{ 'active' if request.path == '/' else '' }}" href="/">Dashboard</a>
+            <a class="{{ 'active' if request.path == '/' else '' }}" href="/">Tableau de bord</a>
 
-            <span class="nav-section nav-section-billing">Billing</span>
-            <a class="{{ 'active' if request.path.startswith('/sales') else '' }}" href="/sales">Sales / Invoices</a>
-            <a class="{{ 'active' if request.path.startswith('/fidelity') else '' }}" href="/fidelity">Fidelity Clients</a>
-            <a class="{{ 'active' if request.path.startswith('/vat') else '' }}" href="/vat">VAT</a>
-            <a href="/float">Float</a>
-            <a href="/takings">Takings</a>
-            <a href="/daily-sales">Daily Sales</a>
-            <a href="/daily-takings">Daily Takings</a>
-            <a href="/reports">Reports</a>
-            <a href="/billing">Subscription Billing</a>
+            <span class="nav-section nav-section-billing">Facturation</span>
+            <a class="{{ 'active' if request.path.startswith('/sales') else '' }}" href="/sales">Ventes / Factures</a>
+            <a class="{{ 'active' if request.path.startswith('/fidelity') else '' }}" href="/fidelity">Clients fidélité</a>
+            <a class="{{ 'active' if request.path.startswith('/vat') else '' }}" href="/vat">TVA</a>
+            <a href="/float">Fond de caisse</a>
+            <a href="/takings">Recettes</a>
+            <a href="/daily-sales">Ventes quotidiennes</a>
+            <a href="/daily-takings">Recettes quotidiennes</a>
+            <a href="/reports">Rapports</a>
+            <a href="/billing">Facturation de l'abonnement</a>
 
-            <span class="nav-section nav-section-purchases">Purchases</span>
-            <a class="{{ 'active' if request.path.startswith('/products') else '' }}" href="/products">Products</a>
-            <a class="{{ 'active' if request.path.startswith('/categories') else '' }}" href="/categories">Categories</a>
-            <a class="{{ 'active' if request.path.startswith('/purchases') else '' }}" href="/purchases">Purchases / Stock In</a>
+            <span class="nav-section nav-section-purchases">Achats</span>
+            <a class="{{ 'active' if request.path.startswith('/products') else '' }}" href="/products">Produits</a>
+            <a class="{{ 'active' if request.path.startswith('/categories') else '' }}" href="/categories">Catégories</a>
+            <a class="{{ 'active' if request.path.startswith('/purchases') else '' }}" href="/purchases">Achats / Entrées en stock</a>
             <a class="{{ 'active' if request.path.startswith('/stock') else '' }}" href="/stock">Stock</a>
-            <a href="/daily-purchases">Daily Purchases</a>
-            <a href="/physical-stock-take">Physical Stock</a>
-            <a href="/barcodes">Barcodes</a>
-            <a href="/barcode-decoder">Decode Barcode</a>
+            <a href="/daily-purchases">Achats quotidiens</a>
+            <a href="/physical-stock-take">Inventaire physique</a>
+            <a href="/barcodes">Codes-barres</a>
+            <a href="/barcode-decoder">Décoder un code-barres</a>
 
-            <span class="nav-section">System</span>
-            <a class="{{ 'active' if request.path.startswith('/account') else '' }}" href="/account">Account</a>
-            <a href="/users">Users</a>
-            <a href="/database-maintenance">Database</a>
-            <a class="{{ 'active' if request.path.startswith('/settings/receipt') else '' }}" href="/settings/receipt">Receipt Settings</a>
-            <a href="/settings/email">Email Settings</a>
-            <a href="/audit-logs">Audit Logs</a>
-            <a href="/license-status">License</a>
-            <a href="/help">Help</a>
+            <span class="nav-section">Système</span>
+            <a class="{{ 'active' if request.path.startswith('/account') else '' }}" href="/account">Compte</a>
+            <a href="/users">Utilisateurs</a>
+            <a href="/database-maintenance">Base de données</a>
+            <a class="{{ 'active' if request.path.startswith('/settings/receipt') else '' }}" href="/settings/receipt">Paramètres des reçus</a>
+            <a href="/settings/email">Paramètres e-mail</a>
+            <a href="/audit-logs">Journal d'audit</a>
+            <a href="/license-status">Licence</a>
+            <a href="/help">Aide</a>
             {% else %}
-            <span class="nav-section nav-section-billing">Billing</span>
-            <a class="{{ 'active' if request.path.startswith('/sales') else '' }}" href="/sales">Sales / Invoices</a>
-            <a class="{{ 'active' if request.path.startswith('/fidelity') else '' }}" href="/fidelity">Fidelity Clients</a>
-            <a class="{{ 'active' if request.path.startswith('/float') else '' }}" href="/float">Float</a>
-            <a class="{{ 'active' if request.path.startswith('/takings') else '' }}" href="/takings">Takings</a>
-            <span class="nav-section nav-section-purchases">Purchases</span>
+            <span class="nav-section nav-section-billing">Facturation</span>
+            <a class="{{ 'active' if request.path.startswith('/sales') else '' }}" href="/sales">Ventes / Factures</a>
+            <a class="{{ 'active' if request.path.startswith('/fidelity') else '' }}" href="/fidelity">Clients fidélité</a>
+            <a class="{{ 'active' if request.path.startswith('/float') else '' }}" href="/float">Fond de caisse</a>
+            <a class="{{ 'active' if request.path.startswith('/takings') else '' }}" href="/takings">Recettes</a>
+            <span class="nav-section nav-section-purchases">Achats</span>
             <a class="{{ 'active' if request.path.startswith('/stock') else '' }}" href="/stock">Stock</a>
             {% endif %}
-            <span class="nav-section">System</span>
-            <a class="logout-link" href="/logout">Logout</a>
+            <span class="nav-section">Système</span>
+            <a class="logout-link" href="/logout">Déconnexion</a>
         </nav>
     </aside>
     <div class="app-main">
         <header class="topbar">
             <div>
-                <button class="menu-button" type="button">â˜°</button>
-                <span class="topbar-title">Mauritius POS V3</span>
+                <button class="menu-button" type="button">☰</button>
+                <span class="topbar-title">POS V3</span>
             </div>
             <div class="topbar-right">
                 <span>{{ now.strftime('%A, %d %B %Y') if now else '' }}</span>
                 <strong>{{ current_user.full_name }}</strong>
                 <label class="background-picker" for="background-choice">
-                    <span>Background</span>
-                    <select id="background-choice" aria-label="Choose background color">
-                        <option value="white">White</option>
-                        <option value="black">Black</option>
-                        <option value="green">Green</option>
-                        <option value="blue">Blue</option>
+                    <span>Arrière-plan</span>
+                    <select id="background-choice" aria-label="Choisir la couleur de l'arrière-plan">
+                        <option value="white">Blanc</option>
+                        <option value="black">Noir</option>
+                        <option value="green">Vert</option>
+                        <option value="blue">Bleu</option>
                     </select>
                 </label>
-                <a class="topbar-logout" href="/logout">Logout</a>
+                <a class="topbar-logout" href="/logout">Déconnexion</a>
             </div>
         </header>
         <main>
@@ -107,7 +107,7 @@
 <header class="public-header">
     <div>
         <h1>JOSEA OUTSOURCING LTD</h1>
-        <p>Mauritius VAT + Stock</p>
+        <p>VAT & Stock Management</p>
     </div>
 </header>
 <main>
@@ -116,7 +116,7 @@
     <div class="notice-row notice-warning">
         <span class="notice-icon">!</span>
         <div>
-            <strong>Database size is {{ "%.1f"|format(db_size_mb) }} MB</strong> - consider <a href="/database-maintenance" class="notice-link">backing up or purging old logs</a>.
+            <strong>La taille de la base de données est de {{ "%.1f"|format(db_size_mb) }} Mo</strong> - pensez à <a href="/database-maintenance" class="notice-link">sauvegarder ou purger les anciens journaux</a>.
         </div>
     </div>
     {% endif %}
@@ -124,8 +124,8 @@
     {% set status = subscription.status|lower %}
     {% if status in ['past_due', 'canceled', 'unpaid'] %}
     <div class="notice-row notice-danger">
-        <strong>Billing status:</strong> {{ subscription.status }}
-        {% if subscription.grace_until %}<span>(grace until {{ subscription.grace_until }})</span>{% endif %}
+        <strong>Statut de facturation :</strong> {{ subscription.status }}
+        {% if subscription.grace_until %}<span>(période de grâce jusqu'au {{ subscription.grace_until }})</span>{% endif %}
     </div>
     {% endif %}
     {% endif %}
@@ -136,15 +136,15 @@
         <footer class="site-footer">
             <span>&copy; {{ now.year if now else '2026' }} Josea Outsourcing Ltd.</span>
             <span class="footer-sep">|</span>
-            <a href="/terms">Terms</a>
+            <a href="/terms">Conditions</a>
             <span class="footer-sep">|</span>
-            <a href="/privacy">Privacy</a>
+            <a href="/privacy">Confidentialité</a>
         </footer>
     </div>
 </div>
 {% else %}
 <footer class="site-footer public-footer">
-    <span>&copy; {{ now.year if now else '2026' }} Josea Outsourcing Ltd. All rights reserved.</span>
+    <span>&copy; {{ now.year if now else '2026' }} Josea Outsourcing Ltd. Tous droits réservés.</span>
 </footer>
 {% endif %}
 <script>

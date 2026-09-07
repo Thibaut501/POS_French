@@ -2,39 +2,39 @@
 {% block content %}
 
 <section class="panel">
-    <h2>Reports</h2>
+    <h2>Rapports</h2>
 
     <form method="get" class="action-row" style="margin-bottom:20px;">
-        <label for="r-from">From</label>
+        <label for="r-from">Du</label>
         <input id="r-from" name="from_date" type="date" value="{{ from_date }}" required>
-        <label for="r-to">To</label>
+        <label for="r-to">Au</label>
         <input id="r-to" name="to_date" type="date" value="{{ to_date }}" required>
-        <button type="submit">Apply filter</button>
+        <button type="submit">Appliquer le filtre</button>
     </form>
 
-    <p class="muted">Showing data from <strong>{{ from_date }}</strong> to <strong>{{ to_date }}</strong></p>
+    <p class="muted">Affichage des données du <strong>{{ from_date }}</strong> au <strong>{{ to_date }}</strong></p>
 </section>
 
 <div id="save-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;">
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border-radius:4px;min-width:300px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-        <h3>Save & Email Report</h3>
+        <h3>Enregistrer et envoyer le rapport</h3>
         <form id="save-form" style="margin-top:15px;">
             <input type="hidden" id="report-kind" name="kind">
             <input type="hidden" name="from_date" value="{{ from_date }}">
             <input type="hidden" name="to_date" value="{{ to_date }}">
             
             <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer;">
-                <input type="checkbox" name="send_email"> Send email copy
+                <input type="checkbox" name="send_email"> Envoyer une copie par e-mail
             </label>
             
             <div id="email-field" style="display:none;margin-bottom:12px;">
-                <label for="recipient-email">Recipient Email</label>
+                <label for="recipient-email">E-mail du destinataire</label>
                 <input id="recipient-email" type="email" name="recipient_email" placeholder="user@example.com">
             </div>
             
             <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
-                <button type="button" onclick="closeSaveModal()">Cancel</button>
-                <button type="submit" class="primary">Save Report</button>
+                <button type="button" onclick="closeSaveModal()">Annuler</button>
+                <button type="submit" class="primary">Enregistrer le rapport</button>
             </div>
         </form>
         <div id="save-status" style="margin-top:12px;"></div>
@@ -44,32 +44,32 @@
 <!-- ============ SALES REPORT ============ -->
 <section class="panel">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <h2 style="margin:0;">Sales Report</h2>
+        <h2 style="margin:0;">Rapport des ventes</h2>
         <div style="display:flex;gap:8px;">
-            <a class="button-link" href="/export/sales?from_date={{ from_date }}&to_date={{ to_date }}">Export Sales CSV</a>
-            <button type="button" class="button-link" onclick="openSaveModal('sales')">Save & Email</button>
+            <a class="button-link" href="/export/sales?from_date={{ from_date }}&to_date={{ to_date }}">Exporter les ventes CSV</a>
+            <button type="button" class="button-link" onclick="openSaveModal('sales')">Enregistrer et e-mail</button>
         </div>
     </div>
 
     <div class="grand-box" style="margin-top:14px;">
         <div>
-            <div class="g-label">Receipts</div>
+            <div class="g-label">Reçus</div>
             <div class="g-val">{{ sales_totals.receipt_count }}</div>
         </div>
         <div>
-            <div class="g-label">Units sold</div>
+            <div class="g-label">Unités vendues</div>
             <div class="g-val">{{ sales_totals.grand_qty }}</div>
         </div>
         <div>
-            <div class="g-label">Gross revenue (incl. VAT)</div>
+            <div class="g-label">Revenu brut (TTC)</div>
             <div class="g-val">Rs {{ "%.2f"|format(sales_totals.grand_total) }}</div>
         </div>
         <div>
-            <div class="g-label">Output VAT</div>
+            <div class="g-label">TVA sortante</div>
             <div class="g-val">Rs {{ "%.2f"|format(sales_totals.grand_vat) }}</div>
         </div>
         <div>
-            <div class="g-label">Net revenue (ex-VAT)</div>
+            <div class="g-label">Revenu net (HT)</div>
             <div class="g-val">Rs {{ "%.2f"|format(sales_totals.grand_total - sales_totals.grand_vat) }}</div>
         </div>
     </div>
@@ -79,15 +79,15 @@
     <table>
         <thead>
             <tr>
-                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Sales by Month</strong></th>
+                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Ventes par mois</strong></th>
             </tr>
             <tr>
-                <th>Month</th>
-                <th>Receipts</th>
-                <th>Units Sold</th>
-                <th>Revenue (incl. VAT)</th>
-                <th>Output VAT</th>
-                <th>Net Revenue</th>
+                <th>Mois</th>
+                <th>Reçus</th>
+                <th>Unités vendues</th>
+                <th>Revenu (TTC)</th>
+                <th>TVA sortante</th>
+                <th>Revenu net</th>
                 <th></th>
             </tr>
         </thead>
@@ -106,7 +106,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>GRAND TOTAL</th>
+                <th>TOTAL GÉNÉRAL</th>
                 <th>{{ sales_totals.receipt_count }}</th>
                 <th>{{ sales_totals.grand_qty }}</th>
                 <th>Rs {{ "%.2f"|format(sales_totals.grand_total) }}</th>
@@ -122,16 +122,16 @@
     <table>
         <thead>
             <tr>
-                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Product Breakdown</strong></th>
+                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Répartition par produit</strong></th>
             </tr>
             <tr>
                 <th>SKU</th>
-                <th>Product</th>
-                <th>Category</th>
-                <th>Units Sold</th>
-                <th>Revenue (incl. VAT)</th>
-                <th>Output VAT</th>
-                <th>Net Revenue</th>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Unités vendues</th>
+                <th>Revenu (TTC)</th>
+                <th>TVA sortante</th>
+                <th>Revenu net</th>
             </tr>
         </thead>
         <tbody>
@@ -150,36 +150,36 @@
     </table>
     </div>
     {% else %}
-    <p class="muted" style="margin-top:12px;">No sales in this period.</p>
+    <p class="muted" style="margin-top:12px;">Aucune vente pour cette période.</p>
     {% endif %}
 </section>
 
 <!-- ============ FIDELITY REPORT ============ -->
 <section class="panel">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <h2 style="margin:0;">Fidelity Points Earned Report</h2>
+        <h2 style="margin:0;">Rapport des points fidélité gagnés</h2>
         <div style="display:flex;gap:8px;">
-            <a class="button-link" href="/export/fidelity?from_date={{ from_date }}&to_date={{ to_date }}">Export Fidelity CSV</a>
-            <button type="button" class="button-link" onclick="openSaveModal('fidelity')">Save & Email</button>
+            <a class="button-link" href="/export/fidelity?from_date={{ from_date }}&to_date={{ to_date }}">Exporter le CSV fidélité</a>
+            <button type="button" class="button-link" onclick="openSaveModal('fidelity')">Enregistrer et e-mail</button>
         </div>
     </div>
-    <p class="muted" style="margin-top:10px;">Point rule during this period: 1 point per Rs {{ rupees_per_point }} spent.</p>
+    <p class="muted" style="margin-top:10px;">Règle des points pour cette période : 1 point pour Rs {{ rupees_per_point }} dépensés.</p>
 
     <div class="grand-box" style="margin-top:14px;">
         <div>
-            <div class="g-label">Fidelity clients</div>
+            <div class="g-label">Clients fidélité</div>
             <div class="g-val">{{ fidelity_totals.customer_count }}</div>
         </div>
         <div>
-            <div class="g-label">Linked receipts</div>
+            <div class="g-label">Reçus liés</div>
             <div class="g-val">{{ fidelity_totals.receipt_count }}</div>
         </div>
         <div>
-            <div class="g-label">Linked spend</div>
+            <div class="g-label">Dépenses liées</div>
             <div class="g-val">Rs {{ "%.2f"|format(fidelity_totals.total_spent) }}</div>
         </div>
         <div>
-            <div class="g-label">Points earned</div>
+            <div class="g-label">Points gagnés</div>
             <div class="g-val">{{ fidelity_totals.points_earned }}</div>
         </div>
     </div>
@@ -188,9 +188,9 @@
     <div class="table-wrap" style="margin-top:14px;">
     <table>
         <thead>
-            <tr><th colspan="8" style="text-align:left;background:#f5f5f5;"><strong>Points Earned by Client</strong></th></tr>
+            <tr><th colspan="8" style="text-align:left;background:#f5f5f5;"><strong>Points gagnés par client</strong></th></tr>
             <tr>
-                <th>Code</th><th>Client</th><th>Phone</th><th>Email</th><th>Receipts</th><th>Total Spend</th><th>Earned</th><th>Balance</th>
+                <th>Code</th><th>Client</th><th>Téléphone</th><th>E-mail</th><th>Reçus</th><th>Total dépensé</th><th>Gagnés</th><th>Solde</th>
             </tr>
         </thead>
         <tbody>
@@ -213,9 +213,9 @@
     <div class="table-wrap" style="margin-top:14px;">
     <table>
         <thead>
-            <tr><th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Recent Fidelity Receipts</strong></th></tr>
+            <tr><th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Reçus fidélité récents</strong></th></tr>
             <tr>
-                <th>Date</th><th>Receipt</th><th>Code</th><th>Client</th><th>Total</th><th>Points Earned</th><th>Cashier</th>
+                <th>Date</th><th>Reçu</th><th>Code</th><th>Client</th><th>Total</th><th>Points gagnés</th><th>Caissier</th>
             </tr>
         </thead>
         <tbody>
@@ -234,31 +234,31 @@
     </table>
     </div>
     {% else %}
-    <p class="muted" style="margin-top:12px;">No fidelity points were earned in this period.</p>
+    <p class="muted" style="margin-top:12px;">Aucun point fidélité n'a été gagné pendant cette période.</p>
     {% endif %}
 </section>
 
 <!-- ============ PURCHASES REPORT ============ -->
 <section class="panel">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <h2 style="margin:0;">Purchases Report</h2>
+        <h2 style="margin:0;">Rapport des achats</h2>
         <div style="display:flex;gap:8px;">
-            <a class="button-link" href="/export/purchases?from_date={{ from_date }}&to_date={{ to_date }}">Export Purchases CSV</a>
-            <button type="button" class="button-link" onclick="openSaveModal('purchases')">Save & Email</button>
+            <a class="button-link" href="/export/purchases?from_date={{ from_date }}&to_date={{ to_date }}">Exporter les achats CSV</a>
+            <button type="button" class="button-link" onclick="openSaveModal('purchases')">Enregistrer et e-mail</button>
         </div>
     </div>
 
     <div class="grand-box" style="margin-top:14px;">
         <div>
-            <div class="g-label">Total ex-VAT</div>
+            <div class="g-label">Total HT</div>
             <div class="g-val">Rs {{ "%.2f"|format(purchases_totals.grand_ex_vat) }}</div>
         </div>
         <div>
-            <div class="g-label">Input VAT</div>
+            <div class="g-label">TVA déductible</div>
             <div class="g-val">Rs {{ "%.2f"|format(purchases_totals.grand_vat) }}</div>
         </div>
         <div>
-            <div class="g-label">Total incl. VAT</div>
+            <div class="g-label">Total TTC</div>
             <div class="g-val">Rs {{ "%.2f"|format(purchases_totals.grand_total) }}</div>
         </div>
     </div>
@@ -268,14 +268,14 @@
     <table>
         <thead>
             <tr>
-                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Purchases by Month</strong></th>
+                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Achats par mois</strong></th>
             </tr>
             <tr>
-                <th>Month</th>
-                <th>Units Received</th>
-                <th>Ex-VAT</th>
+                <th>Mois</th>
+                <th>Unités reçues</th>
+                <th>HT</th>
                 <th>VAT</th>
-                <th>Total (incl. VAT)</th>
+                <th>Total (TTC)</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -295,7 +295,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>GRAND TOTAL</th>
+                <th>TOTAL GÉNÉRAL</th>
                 <th>—</th>
                 <th>Rs {{ "%.2f"|format(purchases_totals.grand_ex_vat) }}</th>
                 <th>Rs {{ "%.2f"|format(purchases_totals.grand_vat) }}</th>
@@ -311,16 +311,16 @@
     <table>
         <thead>
             <tr>
-                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Product & Supplier Breakdown</strong></th>
+                <th colspan="7" style="text-align:left;background:#f5f5f5;"><strong>Répartition par produit et fournisseur</strong></th>
             </tr>
             <tr>
                 <th>SKU</th>
-                <th>Product</th>
-                <th>Supplier</th>
-                <th>Units Received</th>
-                <th>Ex-VAT</th>
+                <th>Produit</th>
+                <th>Fournisseur</th>
+                <th>Unités reçues</th>
+                <th>HT</th>
                 <th>VAT</th>
-                <th>Total (incl. VAT)</th>
+                <th>Total (TTC)</th>
             </tr>
         </thead>
         <tbody>
@@ -339,37 +339,37 @@
     </table>
     </div>
     {% else %}
-    <p class="muted" style="margin-top:12px;">No purchases in this period.</p>
+    <p class="muted" style="margin-top:12px;">Aucun achat pour cette période.</p>
     {% endif %}
 </section>
 
 <!-- ============ STOCK REPORT ============ -->
 <section class="panel">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <h2 style="margin:0;">Stock Report (Period: {{ from_date }} to {{ to_date }})</h2>
+        <h2 style="margin:0;">Rapport de stock (période : {{ from_date }} au {{ to_date }})</h2>
         <div>
             {% if current_user.is_admin %}
-            <a class="button-link" href="/physical-stock-take">📋 Physical Stock Take</a>
+            <a class="button-link" href="/physical-stock-take">📋 Inventaire physique</a>
             {% endif %}
-            <a class="button-link" href="/export/stock">Export Stock CSV</a>
+            <a class="button-link" href="/export/stock">Exporter le stock CSV</a>
         </div>
     </div>
 
     <div class="grand-box" style="margin-top:14px;">
         <div>
-            <div class="g-label">Total products</div>
+            <div class="g-label">Total des produits</div>
             <div class="g-val">{{ stock_rows|length }}</div>
         </div>
         <div>
-            <div class="g-label">Low / negative stock items</div>
+            <div class="g-label">Articles à stock faible / négatif</div>
             <div class="g-val">{{ stock_rows|selectattr('low')|list|length }}</div>
         </div>
         <div>
-            <div class="g-label">Opening stock value (cost)</div>
+            <div class="g-label">Valeur du stock d'ouverture (coût)</div>
             <div class="g-val">Rs {{ "%.2f"|format(total_opening_value) }}</div>
         </div>
         <div>
-            <div class="g-label">Closing stock value (cost)</div>
+            <div class="g-label">Valeur du stock de clôture (coût)</div>
             <div class="g-val">Rs {{ "%.2f"|format(total_closing_value) }}</div>
         </div>
     </div>
@@ -380,16 +380,16 @@
         <thead>
             <tr>
                 <th>SKU</th>
-                <th>Product</th>
-                <th>Category</th>
-                <th>Opening Qty</th>
-                <th>Receipts</th>
-                <th>Sales</th>
-                <th>Closing Qty</th>
-                <th>Cost</th>
-                <th>Opening Value</th>
-                <th>Closing Value</th>
-                <th>Status</th>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Qté d'ouverture</th>
+                <th>Réceptions</th>
+                <th>Ventes</th>
+                <th>Qté de clôture</th>
+                <th>Coût</th>
+                <th>Valeur d'ouverture</th>
+                <th>Valeur de clôture</th>
+                <th>Statut</th>
             </tr>
         </thead>
         <tbody>
@@ -406,8 +406,8 @@
             <td>Rs {{ "%.2f"|format(r.opening_value) }}</td>
             <td>Rs {{ "%.2f"|format(r.closing_value) }}</td>
             <td>
-                {% if r.negative %}<b class="danger">NEGATIVE</b>
-                {% elif r.low %}<b class="warn">LOW</b>
+                {% if r.negative %}<b class="danger">NÉGATIF</b>
+                {% elif r.low %}<b class="warn">FAIBLE</b>
                 {% else %}OK{% endif %}
             </td>
         </tr>
@@ -415,7 +415,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="8">Totals</th>
+                <th colspan="8">Totaux</th>
                 <th>Rs {{ "%.2f"|format(total_opening_value) }}</th>
                 <th>Rs {{ "%.2f"|format(total_closing_value) }}</th>
                 <th></th>
@@ -424,55 +424,55 @@
     </table>
     </div>
     {% else %}
-    <p class="muted" style="margin-top:12px;">No products found.</p>
+    <p class="muted" style="margin-top:12px;">Aucun produit trouvé.</p>
     {% endif %}
 </section>
 
 <!-- ============ CASH TAKINGS REPORT ============ -->
 <section class="panel">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <h2 style="margin:0;">Cash Takings Report</h2>
+        <h2 style="margin:0;">Rapport des recettes</h2>
         <div style="display:flex;gap:8px;">
-            <a class="button-link" href="/export/takings?from_date={{ from_date }}&to_date={{ to_date }}">Export Takings CSV</a>
-            <button type="button" class="button-link" onclick="openSaveModal('takings')">Save & Email</button>
+            <a class="button-link" href="/export/takings?from_date={{ from_date }}&to_date={{ to_date }}">Exporter les recettes CSV</a>
+            <button type="button" class="button-link" onclick="openSaveModal('takings')">Enregistrer et e-mail</button>
         </div>
     </div>
 
     <div class="grand-box" style="margin-top:14px;">
         <div>
-            <div class="g-label">Total receipts</div>
+            <div class="g-label">Total des reçus</div>
             <div class="g-val">{{ takings_totals.receipt_count }}</div>
         </div>
         <div>
-            <div class="g-label">Gross takings (incl. VAT)</div>
+            <div class="g-label">Recettes brutes (TTC)</div>
             <div class="g-val">Rs {{ "%.2f"|format(takings_totals.grand_total) }}</div>
         </div>
         <div>
-            <div class="g-label">Output VAT collected</div>
+            <div class="g-label">TVA sortante collectée</div>
             <div class="g-val">Rs {{ "%.2f"|format(takings_totals.grand_vat) }}</div>
         </div>
         <div>
-            <div class="g-label">Net sales (ex-VAT)</div>
+            <div class="g-label">Ventes nettes (HT)</div>
             <div class="g-val">Rs {{ "%.2f"|format(takings_totals.grand_subtotal - takings_totals.grand_vat) }}</div>
         </div>
     </div>
 
     {% set bank_diff = banking_summary.cash_difference %}
     <div class="float-diff-box {% if bank_diff > 0.005 %}over{% elif bank_diff < -0.005 %}under{% else %}exact{% endif %}">
-        <strong>Banking preparation</strong><br>
-        Cash sales: Rs {{ "%.2f"|format(banking_summary.cash_sales_total) }} &nbsp;|&nbsp;
-        Closing cash counted: Rs {{ "%.2f"|format(banking_summary.closing_float_total) }} &nbsp;|&nbsp;
-        Cash to bank: <strong>Rs {{ "%.2f"|format(banking_summary.cash_to_bank) }}</strong><br>
-        Credit cards: Rs {{ "%.2f"|format(banking_summary.card_total) }} &nbsp;|&nbsp;
-        Digital/mobile: Rs {{ "%.2f"|format(banking_summary.digital_total) }} &nbsp;|&nbsp;
-        Other: Rs {{ "%.2f"|format(banking_summary.other_total) }}<br>
-        Expected drawer cash: Rs {{ "%.2f"|format(banking_summary.expected_cash_total) }} &nbsp;|&nbsp;
+        <strong>Préparation bancaire</strong><br>
+        Ventes en espèces : Rs {{ "%.2f"|format(banking_summary.cash_sales_total) }} &nbsp;|&nbsp;
+        Espèces comptées à la clôture : Rs {{ "%.2f"|format(banking_summary.closing_float_total) }} &nbsp;|&nbsp;
+        Espèces à déposer : <strong>Rs {{ "%.2f"|format(banking_summary.cash_to_bank) }}</strong><br>
+        Cartes de crédit : Rs {{ "%.2f"|format(banking_summary.card_total) }} &nbsp;|&nbsp;
+        Paiements numériques/mobile : Rs {{ "%.2f"|format(banking_summary.digital_total) }} &nbsp;|&nbsp;
+        Autres : Rs {{ "%.2f"|format(banking_summary.other_total) }}<br>
+        Espèces attendues dans le tiroir : Rs {{ "%.2f"|format(banking_summary.expected_cash_total) }} &nbsp;|&nbsp;
         {% if bank_diff > 0.005 %}
-            Overage: <strong>Rs {{ "%.2f"|format(bank_diff) }}</strong>
+            Excédent : <strong>Rs {{ "%.2f"|format(bank_diff) }}</strong>
         {% elif bank_diff < -0.005 %}
-            Shortage: <strong>Rs {{ "%.2f"|format(bank_diff|abs) }}</strong>
+            Manque : <strong>Rs {{ "%.2f"|format(bank_diff|abs) }}</strong>
         {% else %}
-            <strong>Drawer balanced</strong>
+            <strong>Tiroir de caisse équilibré</strong>
         {% endif %}
     </div>
 
@@ -480,7 +480,7 @@
     <div class="table-wrap" style="margin-top:14px;">
     <table>
         <thead>
-            <tr><th>Cash denomination</th><th>Count</th><th>Total</th></tr>
+            <tr><th>Coupure</th><th>Nombre</th><th>Total</th></tr>
         </thead>
         <tbody>
         {% for d in closing_denomination_rows if d.count > 0 %}
@@ -500,12 +500,12 @@
     <table>
         <thead>
             <tr>
-                <th>Payment Method</th>
-                <th>Receipts</th>
-                <th>Net (ex-VAT)</th>
+                <th>Mode de paiement</th>
+                <th>Reçus</th>
+                <th>Net (HT)</th>
                 <th>VAT</th>
-                <th>Total (incl. VAT)</th>
-                <th>% of Takings</th>
+                <th>Total (TTC)</th>
+                <th>% des recettes</th>
             </tr>
         </thead>
         <tbody>
@@ -537,7 +537,7 @@
     </table>
     </div>
     {% else %}
-    <p class="muted" style="margin-top:12px;">No takings recorded in this period.</p>
+    <p class="muted" style="margin-top:12px;">Aucune recette enregistrée pour cette période.</p>
     {% endif %}
 </section>
 
@@ -568,13 +568,13 @@ document.getElementById('save-form').addEventListener('submit', async function(e
         const result = await response.json();
         
         if (result.error) {
-            statusDiv.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+            statusDiv.innerHTML = `<div class="error">Erreur : ${result.error}</div>`;
         } else {
             statusDiv.innerHTML = `<div class="success">✓ ${result.success}</div>`;
             setTimeout(() => closeSaveModal(), 1500);
         }
     } catch(err) {
-        statusDiv.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+        statusDiv.innerHTML = `<div class="error">Erreur : ${err.message}</div>`;
     }
 });
 

@@ -1,38 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="panel">
-    <h2>Add product</h2>
-    <p class="muted">Scan a barcode with your reader to auto-fill the SKU field, or type it manually.</p>
+    <h2>Ajouter un produit</h2>
+    <p class="muted">Scannez un code-barres avec votre lecteur pour remplir automatiquement le champ SKU, ou saisissez-le manuellement.</p>
     <form method="post" class="form-grid" id="product-form">
-        <input id="sku-scan" placeholder="Scan barcode here to fill SKU ↓" autocomplete="off" autofocus
+        <input id="sku-scan" placeholder="Scannez le code-barres ici pour remplir le SKU ↓" autocomplete="off" autofocus
                class="scan-input">
-        <input id="sku" name="sku" placeholder="SKU / Product code (auto-filled by scan)" required>
-        <input name="name" id="product-name" placeholder="Product name" required>
-        <input name="brand" placeholder="Brand (e.g. Coca-Cola, Nestle)">
-        <input name="lodgement" placeholder="Size / Unit (e.g. 500ml, 100gms, 1L)">
-        <select name="category" aria-label="Product category" title="Product category">
+        <input id="sku" name="sku" placeholder="SKU / Code produit (rempli automatiquement par le scan)" required>
+        <input name="name" id="product-name" placeholder="Nom du produit" required>
+        <input name="brand" placeholder="Marque (ex. Coca-Cola, Nestle)">
+        <input name="lodgement" placeholder="Taille / Unité (ex. 500ml, 100g, 1L)">
+        <select name="category" aria-label="Catégorie du produit" title="Catégorie du produit">
             {% for c in categories %}
             <option value="{{ c.name }}">{{ c.name }} ({{ c.vat_treatment }})</option>
             {% endfor %}
         </select>
         {% if current_user.is_admin %}
-        <a class="button-link" href="/categories">+ Add Category</a>
+        <a class="button-link" href="/categories">+ Ajouter une catégorie</a>
         {% endif %}
-        <input name="cost_price" type="number" step="0.01" placeholder="Cost price" required>
-        <input name="selling_price" type="number" step="0.01" placeholder="Selling price" required>
-        <input name="low_stock_level" type="number" value="5" placeholder="Low stock level">
-        <button type="submit">Add product</button>
+        <input name="cost_price" type="number" step="0.01" placeholder="Prix d'achat" required>
+        <input name="selling_price" type="number" step="0.01" placeholder="Prix de vente" required>
+        <input name="low_stock_level" type="number" value="5" placeholder="Niveau de stock faible">
+        <button type="submit">Ajouter un produit</button>
     </form>
 </section>
 
 <section class="panel">
 <div class="panel-heading-row">
-    <h2>Products</h2>
-    {% if current_user.is_admin %}<a class="button-link" href="/categories">Manage Categories</a>{% endif %}
+    <h2>Produits</h2>
+    {% if current_user.is_admin %}<a class="button-link" href="/categories">Gérer les catégories</a>{% endif %}
 </div>
 <div class="table-wrap">
 <table>
-<tr><th>SKU</th><th>Name</th><th>Brand</th><th>Size/Unit</th><th>Category</th><th>Cost</th><th>Selling</th><th>Low stock</th><th>Barcode</th><th>Actions</th></tr>
+<tr><th>SKU</th><th>Nom</th><th>Marque</th><th>Taille/Unité</th><th>Catégorie</th><th>Coût</th><th>Vente</th><th>Stock faible</th><th>Code-barres</th><th>Actions</th></tr>
 {% for p in products %}
 <tr>
     <td>{{ p.sku }}</td>
@@ -43,20 +43,20 @@
     <td>Rs {{ "%.2f"|format(p.cost_price) }}</td>
     <td>Rs {{ "%.2f"|format(p.selling_price) }}</td>
     <td>{{ p.low_stock_level }}</td>
-    <td><a class="button-link" href="/barcode/{{ p.id }}?format=png" target="_blank">🖨 Print</a></td>
+    <td><a class="button-link" href="/barcode/{{ p.id }}?format=png" target="_blank">🖨 Imprimer</a></td>
     <td>
         {% if current_user.is_admin %}
-            <a class="button-link" href="/products/{{ p.id }}/edit">✏️ Edit</a>
+            <a class="button-link" href="/products/{{ p.id }}/edit">✏️ Modifier</a>
             {% if p.sales_count == 0 and p.purchases_count == 0 %}
             <form method="post" action="/products/{{ p.id }}/delete" class="form-inline"
-                  onsubmit="return confirm('Delete {{ p.name }}? This cannot be undone.')">
-                <button class="secondary-btn" type="submit">🗑 Delete</button>
+                  onsubmit="return confirm('Supprimer {{ p.name }} ? Cette action est irréversible.')">
+                <button class="secondary-btn" type="submit">🗑 Supprimer</button>
             </form>
             {% else %}
-            <span class="muted">Cannot delete (has history)</span>
+            <span class="muted">Suppression impossible (historique existant)</span>
             {% endif %}
         {% else %}
-            <span class="muted">Admin only</span>
+            <span class="muted">Réservé à l'administrateur</span>
         {% endif %}
     </td>
 </tr>

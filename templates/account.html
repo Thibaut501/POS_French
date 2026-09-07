@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="panel login-panel">
-    <h2>My account</h2>
+    <h2>Mon compte</h2>
     {% if success %}<div class="success">{{ success }}</div>{% endif %}
     <form method="post" class="form-grid login-grid">
-        <input name="current_password" type="password" placeholder="Current password" required>
-        <input name="new_password" type="password" placeholder="New password" required>
-        <input name="confirm_password" type="password" placeholder="Confirm new password" required>
-        <button type="submit">Update password</button>
+        <input name="current_password" type="password" placeholder="Mot de passe actuel" required>
+        <input name="new_password" type="password" placeholder="Nouveau mot de passe" required>
+        <input name="confirm_password" type="password" placeholder="Confirmer le nouveau mot de passe" required>
+        <button type="submit">Mettre à jour le mot de passe</button>
     </form>
 </section>
 {% endblock %}

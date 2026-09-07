@@ -149,37 +149,37 @@ button, a {
     <section class="receipt-paper">
         <div class="receipt-wrap">
             <div class="center">
-                <p class="fiscal-title">MRA Fiscalised</p>
-                <p class="invoice-label">MRA Invoice Number:</p>
+                <p class="fiscal-title">MRA Fiscalisé</p>
+                <p class="invoice-label">Numéro de facture MRA :</p>
                 <p class="invoice-no">{{ summary.invoice_number }}</p>
-                <div class="qr-preview" aria-label="MRA QR preview">
+                <div class="qr-preview" aria-label="Aperçu QR MRA">
                     {% for row in summary.qr_matrix %}{% for cell in row %}<span class="{{ 'on' if cell else '' }}"></span>{% endfor %}{% endfor %}
                 </div>
                 <p class="shop-name">{{ summary.business_name }}</p>
                 {% if summary.business_line_1 %}<p class="meta">{{ summary.business_line_1 }}</p>{% endif %}
                 {% if summary.business_line_2 %}<p class="meta">{{ summary.business_line_2 }}</p>{% endif %}
-                {% if summary.tel %}<p class="meta">TEL: {{ summary.tel }}</p>{% endif %}
-                <p class="meta">VAT REG. NO {{ summary.vat_reg_no }}</p>
-                <p class="meta">BRN: {{ summary.brn }}</p>
-                <p class="vat-title">VAT INVOICE</p>
+                {% if summary.tel %}<p class="meta">TÉL : {{ summary.tel }}</p>{% endif %}
+                <p class="meta">N° TVA {{ summary.vat_reg_no }}</p>
+                <p class="meta">BRN : {{ summary.brn }}</p>
+                <p class="vat-title">FACTURE TVA</p>
             </div>
 
             <div class="line"></div>
             <div class="row meta"><span>{{ summary.display_datetime }}</span><span>{{ receipt.username }}</span></div>
             <div class="line"></div>
-            <p class="section-title">ITEMS</p>
+            <p class="section-title">ARTICLES</p>
             <div class="row items-head"><span>Description</span><span>Total</span></div>
 
             {% for item in summary["items"] %}
             <div class="item">
                 <div class="item-name">{{ item.name }}</div>
-                {% if item.sku %}<div class="item-sku">SKU: {{ item.sku }}</div>{% endif %}
+                {% if item.sku %}<div class="item-sku">SKU : {{ item.sku }}</div>{% endif %}
                 <div class="item-line">
-                    <span>Qty {{ item.qty }}</span>
-                    <span class="item-amount">Unit Rs{{ "%.2f"|format(item.unit_price) }}</span>
+                    <span>Qté {{ item.qty }}</span>
+                    <span class="item-amount">Unité Rs{{ "%.2f"|format(item.unit_price) }}</span>
                 </div>
                 <div class="item-line total-line">
-                    <span>Line total</span>
+                    <span>Total ligne</span>
                     <span class="item-amount">Rs{{ "%.2f"|format(item.total) }} {{ item.tax_code }}</span>
                 </div>
             </div>
@@ -187,25 +187,25 @@ button, a {
 
             <div class="strong-line"></div>
             <div class="totals">
-                <div class="row"><span>SUB TOTAL</span><span>Rs {{ "%.2f"|format(receipt.total) }}</span></div>
-                <div class="row"><span>VAT 15% ({{ "%.2f"|format(summary.standard_base) }})</span><span>Rs {{ "%.2f"|format(summary.standard_vat) }}</span></div>
-                <div class="row"><span>VAT EXEMPT ({{ "%.2f"|format(summary.exempt_total) }})</span><span>Rs 0.00</span></div>
-                <div class="row"><span>VAT ZERO ({{ "%.2f"|format(summary.zero_total) }})</span><span>Rs 0.00</span></div>
+                <div class="row"><span>SOUSTOTAL</span><span>Rs {{ "%.2f"|format(receipt.total) }}</span></div>
+                <div class="row"><span>TVA 15% ({{ "%.2f"|format(summary.standard_base) }})</span><span>Rs {{ "%.2f"|format(summary.standard_vat) }}</span></div>
+                <div class="row"><span>TVA EXONÉRÉE ({{ "%.2f"|format(summary.exempt_total) }})</span><span>Rs 0.00</span></div>
+                <div class="row"><span>TVA ZÉRO ({{ "%.2f"|format(summary.zero_total) }})</span><span>Rs 0.00</span></div>
                 <div class="row total"><span>TOTAL</span><span>Rs {{ "%.2f"|format(receipt.total) }}</span></div>
             </div>
 
             {% if receipt.payment_method == 'Cash' %}
-            <div class="row"><span>Cash</span><span>Rs {{ "%.2f"|format(receipt.amount_tendered) }}</span></div>
-            <div class="row"><span>Change</span><span>Rs {{ "%.2f"|format(receipt.change_due) }}</span></div>
+            <div class="row"><span>Espèces</span><span>Rs {{ "%.2f"|format(receipt.amount_tendered) }}</span></div>
+            <div class="row"><span>Monnaie</span><span>Rs {{ "%.2f"|format(receipt.change_due) }}</span></div>
             {% else %}
-            <div class="row"><span>Payment</span><span>{{ receipt.payment_method }}</span></div>
+            <div class="row"><span>Paiement</span><span>{{ receipt.payment_method }}</span></div>
             {% endif %}
             <div class="line"></div>
-            <div class="row meta"><span>Item count: {{ "%g"|format(summary.item_count) }}</span><span></span></div>
-            <div class="row meta"><span>Trans: {{ summary.transaction_id }}</span><span>Terminal: {{ summary.terminal_id }}</span></div>
+            <div class="row meta"><span>Nb d'articles : {{ "%g"|format(summary.item_count) }}</span><span></span></div>
+            <div class="row meta"><span>Trans : {{ summary.transaction_id }}</span><span>Terminal : {{ summary.terminal_id }}</span></div>
 
             <div class="tax-note center">
-                Vat 15%=Tv&nbsp;&nbsp; Vat Exempt=Te&nbsp;&nbsp; Vat Zero=Tz
+                TVA 15%=Tv&nbsp;&nbsp; TVA exonérée=Te&nbsp;&nbsp; TVA zéro=Tz
             </div>
             <div class="footer center">
                 <p>***POUR MIEUX VOUS SERVIR***</p>
@@ -216,7 +216,7 @@ button, a {
 
     <div class="actions no-print">
         {% if request.args.get('print_status') == 'sent' %}
-        <p class="print-message ok">Sent to E-PoS printer.</p>
+        <p class="print-message ok">Envoyé à l'imprimante E-PoS.</p>
         {% endif %}
         {% if request.args.get('print_error') %}
         <p class="print-message error">{{ request.args.get('print_error') }}</p>

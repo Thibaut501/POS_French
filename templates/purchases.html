@@ -1,91 +1,91 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="panel">
-    <h2>Record purchase / stock in</h2>
+    <h2>Enregistrer un achat / une entrée en stock</h2>
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
     <form method="post" class="form-grid" id="purchase-form">
 
         <fieldset class="fieldset-section">
-            <legend>Product &amp; Quantity</legend>
+            <legend>Produit et quantité</legend>
             <div class="form-grid fieldset-inner">
                 <div>
-                    <label for="p-date">Purchase date</label>
+                    <label for="p-date">Date d'achat</label>
                     <input id="p-date" name="date" type="date" value="{{ today }}" required>
                 </div>
                 <div>
-                    <label for="p-product">Product</label>
-                    <select id="p-product" name="product_id" required aria-label="Product">
+                    <label for="p-product">Produit</label>
+                    <select id="p-product" name="product_id" required aria-label="Produit">
                         {% for p in products %}
-                        <option value="{{ p.id }}">{{ p.sku }} – {{ p.name }} (default Rs {{ "%.2f"|format(p.cost_price) }})</option>
+                        <option value="{{ p.id }}">{{ p.sku }} – {{ p.name }} (par défaut Rs {{ "%.2f"|format(p.cost_price) }})</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div>
-                    <label for="p-qty">Quantity</label>
-                    <input id="p-qty" name="qty" type="number" min="1" placeholder="Qty" required>
+                    <label for="p-qty">Quantité</label>
+                    <input id="p-qty" name="qty" type="number" min="1" placeholder="Qté" required>
                 </div>
                 <div>
-                    <label for="p-cost">Unit cost (Rs)</label>
-                    <input id="p-cost" name="unit_cost" type="number" step="0.01" placeholder="Override cost (optional)">
+                    <label for="p-cost">Coût unitaire (Rs)</label>
+                    <input id="p-cost" name="unit_cost" type="number" step="0.01" placeholder="Modifier le coût (facultatif)">
                 </div>
                 <div>
-                    <label for="p-expiry">Expiry date</label>
-                    <input id="p-expiry" name="expiry_date" type="date" title="Expiry date of the goods">
+                    <label for="p-expiry">Date d'expiration</label>
+                    <input id="p-expiry" name="expiry_date" type="date" title="Date d'expiration des marchandises">
                 </div>
             </div>
         </fieldset>
 
         <fieldset class="fieldset-section">
-            <legend>Supplier &amp; Invoice</legend>
+            <legend>Fournisseur et facture</legend>
             <div class="form-grid fieldset-inner">
                 <div>
-                    <label for="p-supplier">Supplier name</label>
-                    <input id="p-supplier" name="supplier_name" placeholder="e.g. ABC Distributors">
+                    <label for="p-supplier">Nom du fournisseur</label>
+                    <input id="p-supplier" name="supplier_name" placeholder="ex. ABC Distributors">
                 </div>
                 <div>
-                    <label for="p-invoice">Invoice number</label>
-                    <input id="p-invoice" name="invoice_number" placeholder="e.g. INV-2026-001">
+                    <label for="p-invoice">Numéro de facture</label>
+                    <input id="p-invoice" name="invoice_number" placeholder="ex. FAC-2026-001">
                 </div>
                 <div>
-                    <label for="p-contact">Contact person</label>
-                    <input id="p-contact" name="contact_person" placeholder="e.g. John Smith">
+                    <label for="p-contact">Personne à contacter</label>
+                    <input id="p-contact" name="contact_person" placeholder="ex. Jean Dupont">
                 </div>
                 <div>
-                    <label for="p-email">Contact email</label>
-                    <input id="p-email" name="contact_email" type="email" placeholder="e.g. john@abc.com">
+                    <label for="p-email">E-mail de contact</label>
+                    <input id="p-email" name="contact_email" type="email" placeholder="ex. jean@abc.com">
                 </div>
                 <div>
-                    <label for="p-phone">Contact phone</label>
-                    <input id="p-phone" name="contact_phone" type="tel" placeholder="e.g. +230 5XXX XXXX">
+                    <label for="p-phone">Téléphone de contact</label>
+                    <input id="p-phone" name="contact_phone" type="tel" placeholder="ex. +230 5XXX XXXX">
                 </div>
             </div>
         </fieldset>
 
         <div class="span-3">
-            <button type="submit">Save purchase</button>
+            <button type="submit">Enregistrer l'achat</button>
         </div>
     </form>
 </section>
 
 <section class="panel">
-    <h2>Purchase history</h2>
-    <a class="button-link" href="/export/purchases">Export purchases CSV</a>
+    <h2>Historique des achats</h2>
+    <a class="button-link" href="/export/purchases">Exporter les achats CSV</a>
     <div class="table-wrap">
     <table>
         <thead>
         <tr>
             <th>Date</th>
-            <th>Supplier</th>
-            <th>Invoice No.</th>
+            <th>Fournisseur</th>
+            <th>Facture</th>
             <th>SKU</th>
-            <th>Product</th>
+            <th>Produit</th>
             <th>Cat.</th>
-            <th>Qty</th>
-            <th>Unit cost</th>
-            <th>Amt ex-VAT</th>
-            <th>VAT</th>
-            <th>Total (incl.)</th>
-            <th>Expiry</th>
+            <th>Qté</th>
+            <th>Coût unitaire</th>
+            <th>Montant HT</th>
+            <th>TVA</th>
+            <th>Total (TTC)</th>
+            <th>Expiration</th>
             <th>Contact</th>
         </tr>
         </thead>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Billing</h2>
+<h2>Facturation</h2>
 
 {% if reason %}
 <div class="error">{{ reason }}</div>
@@ -8,28 +8,28 @@
 
 {% if subscription %}
 <div class="panel">
-    <p><strong>Status:</strong> {{ subscription.status }}</p>
-    <p><strong>Current period end:</strong> {{ subscription.current_period_end or "n/a" }}</p>
-    <p><strong>Grace until:</strong> {{ subscription.grace_until or "n/a" }}</p>
+    <p><strong>Statut :</strong> {{ subscription.status }}</p>
+    <p><strong>Fin de la période actuelle :</strong> {{ subscription.current_period_end or "s.o." }}</p>
+    <p><strong>Période de grâce jusqu'au :</strong> {{ subscription.grace_until or "s.o." }}</p>
 </div>
 {% else %}
 <div class="panel">
-    <p>No subscription found. Start a subscription to access all features.</p>
+    <p>Aucun abonnement trouvé. Démarrez un abonnement pour accéder à toutes les fonctionnalités.</p>
 </div>
 {% endif %}
 
 {% if current_user and current_user.is_admin %}
 <div class="panel">
-    <h3>Manage Subscription</h3>
+    <h3>Gérer l'abonnement</h3>
     <form method="post" action="{{ url_for('create_checkout_session') }}">
         <input type="hidden" name="price_id" value="">
-        <p class="muted">Set <code>STRIPE_DEFAULT_PRICE_ID</code> or pass a price_id to start a new subscription.</p>
-        <button type="submit">Start / Upgrade Subscription</button>
+        <p class="muted">Définissez <code>STRIPE_DEFAULT_PRICE_ID</code> ou transmettez un price_id pour démarrer un nouvel abonnement.</p>
+        <button type="submit">Démarrer / mettre à niveau l'abonnement</button>
     </form>
 
     {% if subscription and subscription.status in ['active', 'past_due', 'trialing'] %}
     <form method="post" action="{{ url_for('create_portal_session') }}" class="mt-10">
-        <button type="submit" class="secondary-btn">Manage Billing (Invoices, Cancel, Update Card)</button>
+        <button type="submit" class="secondary-btn">Gérer la facturation (factures, annuler, mettre à jour la carte)</button>
     </form>
     {% endif %}
 </div>

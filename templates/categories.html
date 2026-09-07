@@ -3,37 +3,37 @@
 <section class="panel">
     <div class="panel-heading-row">
         <div>
-            <h2>Product Categories</h2>
-            <p class="muted">Create categories used when adding or editing products. VAT treatment controls VAT calculation.</p>
+            <h2>Catégories de produits</h2>
+            <p class="muted">Créez des catégories utilisées lors de l'ajout ou de la modification des produits. Le traitement TVA détermine le calcul de la TVA.</p>
         </div>
-        <a class="button-link" href="/products">Back to Products</a>
+        <a class="button-link" href="/products">Retour aux produits</a>
     </div>
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
     {% if success %}<div class="success">{{ success }}</div>{% endif %}
 
     <form method="post" class="form-grid">
         <input type="hidden" name="action" value="create">
-        <input name="name" placeholder="Category name, e.g. Drinks, Snacks, Services" required>
-        <select name="vat_treatment" aria-label="VAT treatment">
-            <option value="Standard">Standard VAT</option>
-            <option value="Zero">Zero-rated</option>
-            <option value="Exempt">Exempt</option>
+        <input name="name" placeholder="Nom de la catégorie, ex. Boissons, Collations, Services" required>
+        <select name="vat_treatment" aria-label="Traitement TVA">
+            <option value="Standard">TVA standard</option>
+            <option value="Zero">Taux zéro</option>
+            <option value="Exempt">Exonéré</option>
         </select>
         <input name="description" placeholder="Description / notes">
-        <button type="submit">Add Category</button>
+        <button type="submit">Ajouter une catégorie</button>
     </form>
 </section>
 
 <section class="panel">
-    <h2>Existing Categories</h2>
+    <h2>Catégories existantes</h2>
     <div class="table-wrap">
         <table>
             <tr>
-                <th>Name</th>
-                <th>VAT Treatment</th>
+                <th>Nom</th>
+                <th>Traitement TVA</th>
                 <th>Description</th>
-                <th>Status</th>
-                <th>Products</th>
+                <th>Statut</th>
+                <th>Produits</th>
                 <th>Actions</th>
             </tr>
             {% for c in categories %}
@@ -43,24 +43,24 @@
                     <td><input name="name" value="{{ c.name }}" required></td>
                     <td>
                         <select name="vat_treatment">
-                            <option value="Standard" {% if c.vat_treatment == 'Standard' %}selected{% endif %}>Standard VAT</option>
-                            <option value="Zero" {% if c.vat_treatment == 'Zero' %}selected{% endif %}>Zero-rated</option>
-                            <option value="Exempt" {% if c.vat_treatment == 'Exempt' %}selected{% endif %}>Exempt</option>
+                            <option value="Standard" {% if c.vat_treatment == 'Standard' %}selected{% endif %}>TVA standard</option>
+                            <option value="Zero" {% if c.vat_treatment == 'Zero' %}selected{% endif %}>Taux zéro</option>
+                            <option value="Exempt" {% if c.vat_treatment == 'Exempt' %}selected{% endif %}>Exonéré</option>
                         </select>
                     </td>
                     <td><input name="description" value="{{ c.description or '' }}"></td>
                     <td>
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="is_active" {% if c.is_active %}checked{% endif %}> Active
+                            <input type="checkbox" name="is_active" {% if c.is_active %}checked{% endif %}> Actif
                         </label>
                     </td>
                     <td>{{ c.product_count }}</td>
                     <td>
-                        <button type="submit" name="action" value="update">Save</button>
+                        <button type="submit" name="action" value="update">Enregistrer</button>
                         {% if c.product_count == 0 %}
-                        <button class="secondary-btn" type="submit" name="action" value="delete" onclick="return confirm('Delete this category?')">Delete</button>
+                        <button class="secondary-btn" type="submit" name="action" value="delete" onclick="return confirm('Supprimer cette catégorie ?')">Supprimer</button>
                         {% else %}
-                        <span class="muted">In use</span>
+                        <span class="muted">Utilisée</span>
                         {% endif %}
                     </td>
                 </form>

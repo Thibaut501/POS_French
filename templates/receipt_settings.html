@@ -2,33 +2,33 @@
 {% block content %}
 
 <section class="panel">
-    <h2>Receipt Settings</h2>
-    <p class="muted">These details print on every E-PoS receipt below the MRA QR section.</p>
+    <h2>Paramètres des reçus</h2>
+    <p class="muted">Ces détails s'impriment sur chaque reçu E-PoS sous la section QR MRA.</p>
 
     {% if error %}<div class="error" style="margin-bottom:12px;">{{ error }}</div>{% endif %}
     {% if success %}<div class="success" style="margin-bottom:12px;">✓ {{ success }}</div>{% endif %}
 
     <form method="post">
         <fieldset class="fieldset-section">
-            <legend>Business Details</legend>
+            <legend>Détails de l'entreprise</legend>
             <div class="form-grid">
                 <div>
-                    <label for="business-name">Business Name</label>
+                    <label for="business-name">Nom de l'entreprise</label>
                     <input id="business-name" name="business_name" type="text"
                            value="{{ settings.get('receipt_business_name', '') }}" required>
                 </div>
                 <div>
-                    <label for="business-line-1">Address Line 1</label>
+                    <label for="business-line-1">Adresse ligne 1</label>
                     <input id="business-line-1" name="business_line_1" type="text"
                            value="{{ settings.get('receipt_business_line_1', '') }}">
                 </div>
                 <div>
-                    <label for="business-line-2">Address Line 2</label>
+                    <label for="business-line-2">Adresse ligne 2</label>
                     <input id="business-line-2" name="business_line_2" type="text"
                            value="{{ settings.get('receipt_business_line_2', '') }}">
                 </div>
                 <div>
-                    <label for="tel">Telephone</label>
+                    <label for="tel">Téléphone</label>
                     <input id="tel" name="tel" type="text"
                            value="{{ settings.get('receipt_tel', '') }}">
                 </div>
@@ -36,22 +36,22 @@
         </fieldset>
 
         <fieldset class="fieldset-section">
-            <legend>Tax and Fiscal Details</legend>
+            <legend>Détails fiscaux et TVA</legend>
             <div class="form-grid">
                 <div>
-                    <label for="vat-reg-no">VAT Registration Number</label>
+                    <label for="vat-reg-no">Numéro d'immatriculation TVA</label>
                     <input id="vat-reg-no" name="vat_reg_no" type="text"
-                           placeholder="e.g. VAT28014468"
+                           placeholder="ex. VAT28014468"
                            value="{{ settings.get('receipt_vat_reg_no', '') }}" required>
                 </div>
                 <div>
                     <label for="brn">BRN</label>
                     <input id="brn" name="brn" type="text"
-                           placeholder="e.g. C22185904"
+                           placeholder="ex. C22185904"
                            value="{{ settings.get('receipt_brn', '') }}" required>
                 </div>
                 <div>
-                    <label for="terminal-id">Terminal ID</label>
+                    <label for="terminal-id">ID du terminal</label>
                     <input id="terminal-id" name="terminal_id" type="text"
                            value="{{ settings.get('receipt_terminal_id', '') }}">
                 </div>
@@ -59,8 +59,8 @@
         </fieldset>
 
         <div style="margin-top:20px;">
-            <button type="submit">Save Receipt Settings</button>
-            <a class="button-link" href="/sales">Back</a>
+            <button type="submit">Enregistrer les paramètres du reçu</button>
+            <a class="button-link" href="/sales">Retour</a>
         </div>
     </form>
 </section>

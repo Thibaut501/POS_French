@@ -2,60 +2,60 @@
 {% block content %}
 
 <section class="panel">
-    <h2>Email Settings</h2>
-    <p class="muted">Configure email for sending reports and automated backups.</p>
+    <h2>Paramètres e-mail</h2>
+    <p class="muted">Configurez l'e-mail pour l'envoi des rapports et des sauvegardes automatiques.</p>
 
     {% if error %}<div class="error" style="margin-bottom:12px;">{{ error }}</div>{% endif %}
     {% if success %}<div class="success" style="margin-bottom:12px;">✓ {{ success }}</div>{% endif %}
 
     <form method="post">
         <fieldset class="fieldset-section">
-            <legend>SMTP Configuration</legend>
+            <legend>Configuration SMTP</legend>
             <div class="form-grid">
                 <div>
-                    <label for="smtp-server">SMTP Server</label>
+                    <label for="smtp-server">Serveur SMTP</label>
                     <input id="smtp-server" name="smtp_server" type="text" 
-                           placeholder="e.g. smtp.gmail.com"
+                           placeholder="ex. smtp.gmail.com"
                            value="{{ settings.get('email_smtp_server', '') }}" required>
                 </div>
                 <div>
-                    <label for="smtp-port">SMTP Port</label>
+                    <label for="smtp-port">Port SMTP</label>
                     <input id="smtp-port" name="smtp_port" type="number" 
                            value="{{ settings.get('email_smtp_port', '587') }}" required>
                 </div>
                 <div>
-                    <label for="sender-email">Sender Email</label>
+                    <label for="sender-email">E-mail expéditeur</label>
                     <input id="sender-email" name="sender_email" type="email" 
-                           placeholder="e.g. pos@example.com"
+                           placeholder="ex. pos@example.com"
                            value="{{ settings.get('email_sender', '') }}" required>
                 </div>
                 <div>
-                    <label for="sender-password">Sender Password</label>
+                    <label for="sender-password">Mot de passe expéditeur</label>
                     <input id="sender-password" name="sender_password" type="password" 
-                           placeholder="Email password or app password"
+                           placeholder="Mot de passe e-mail ou mot de passe d'application"
                            value="{{ settings.get('email_password', '') }}" required>
-                    <p class="muted" style="font-size:0.85rem;margin-top:4px;">For Gmail, use an App Password (not your main password)</p>
+                    <p class="muted" style="font-size:0.85rem;margin-top:4px;">Pour Gmail, utilisez un mot de passe d'application et non votre mot de passe principal.</p>
                 </div>
             </div>
         </fieldset>
 
         <fieldset class="fieldset-section">
-            <legend>Automated Daily Backup Email</legend>
+            <legend>E-mail de sauvegarde quotidienne automatisée</legend>
             <div>
-                <label for="backup-recipients">Backup Email Recipients</label>
+                <label for="backup-recipients">Destinataires de la sauvegarde</label>
                 <input id="backup-recipients" name="backup_recipients" type="text" 
                        placeholder="email1@example.com, email2@example.com"
                        value="{{ settings.get('email_backup_recipients', '') }}"
                        style="width:100%;">
                 <p class="muted" style="margin-top:4px;">
-                    Enter comma-separated email addresses. Database backups will be sent daily at 2:00 AM.
+                    Saisissez des adresses e-mail séparées par des virgules. Les sauvegardes de la base seront envoyées chaque jour à 2:00 AM.
                 </p>
             </div>
         </fieldset>
 
         <div style="margin-top:20px;">
-            <button type="submit">Save Email Settings</button>
-            <a class="button-link" href="/database-maintenance">Back</a>
+            <button type="submit">Enregistrer les paramètres e-mail</button>
+            <a class="button-link" href="/database-maintenance">Retour</a>
         </div>
     </form>
 </section>

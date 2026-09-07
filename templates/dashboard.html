@@ -1,48 +1,48 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="background-control" aria-label="Choose dashboard background">
-    <strong>Dashboard background</strong>
+<section class="background-control" aria-label="Choisir l'arrière-plan du tableau de bord">
+    <strong>Arrière-plan du tableau de bord</strong>
     <div class="background-options">
-        <button type="button" class="background-option background-option-white" data-background-choice="white">White</button>
-        <button type="button" class="background-option background-option-black" data-background-choice="black">Black</button>
-        <button type="button" class="background-option background-option-green" data-background-choice="green">Green</button>
-        <button type="button" class="background-option background-option-blue" data-background-choice="blue">Blue</button>
+        <button type="button" class="background-option background-option-white" data-background-choice="white">Blanc</button>
+        <button type="button" class="background-option background-option-black" data-background-choice="black">Noir</button>
+        <button type="button" class="background-option background-option-green" data-background-choice="green">Vert</button>
+        <button type="button" class="background-option background-option-blue" data-background-choice="blue">Bleu</button>
     </div>
 </section>
 <section class="two-screen-dashboard">
     <article class="half-screen half-purchases">
         <div class="half-icon">PRD</div>
-        <h1>Products</h1>
-        <p>Products, categories, stock entries, barcode tools and purchase history.</p>
+        <h1>Produits</h1>
+        <p>Produits, catégories, entrées en stock, outils de codes-barres et historique des achats.</p>
         <div class="half-divider"></div>
         <div class="half-menu">
-            <a href="/products"><span class="menu-icon">PR</span><strong>Products / Suppliers</strong><span class="arrow">&gt;</span></a>
-            <a href="/categories"><span class="menu-icon">CT</span><strong>Categories</strong><span class="arrow">&gt;</span></a>
-            <a href="/purchases"><span class="menu-icon">PO</span><strong>Purchases</strong><span class="arrow">&gt;</span></a>
-            <a href="/daily-purchases"><span class="menu-icon">DP</span><strong>Daily Purchases</strong><span class="arrow">&gt;</span></a>
-            <a href="/stock"><span class="menu-icon">ST</span><strong>Stock Entry</strong><span class="arrow">&gt;</span></a>
-            <a href="/physical-stock-take"><span class="menu-icon">PS</span><strong>Physical Stock</strong><span class="arrow">&gt;</span></a>
-            <a href="/barcodes"><span class="menu-icon">BC</span><strong>Barcodes</strong><span class="arrow">&gt;</span></a>
-            <a href="/barcode-decoder"><span class="menu-icon">SC</span><strong>Decode Barcode</strong><span class="arrow">&gt;</span></a>
+            <a href="/products"><span class="menu-icon">PR</span><strong>Produits / Fournisseurs</strong><span class="arrow">&gt;</span></a>
+            <a href="/categories"><span class="menu-icon">CT</span><strong>Catégories</strong><span class="arrow">&gt;</span></a>
+            <a href="/purchases"><span class="menu-icon">PO</span><strong>Achats</strong><span class="arrow">&gt;</span></a>
+            <a href="/daily-purchases"><span class="menu-icon">DP</span><strong>Achats quotidiens</strong><span class="arrow">&gt;</span></a>
+            <a href="/stock"><span class="menu-icon">ST</span><strong>Entrée de stock</strong><span class="arrow">&gt;</span></a>
+            <a href="/physical-stock-take"><span class="menu-icon">PS</span><strong>Inventaire physique</strong><span class="arrow">&gt;</span></a>
+            <a href="/barcodes"><span class="menu-icon">BC</span><strong>Codes-barres</strong><span class="arrow">&gt;</span></a>
+            <a href="/barcode-decoder"><span class="menu-icon">SC</span><strong>Décoder un code-barres</strong><span class="arrow">&gt;</span></a>
         </div>
     </article>
 
     <article class="half-screen half-billing">
         <div class="half-icon">POS</div>
-        <h1>Billing</h1>
-        <p>Sales, receipts, VAT, takings, float, reports and receipt settings.</p>
+        <h1>Facturation</h1>
+        <p>Ventes, reçus, TVA, recettes, fond de caisse, rapports et paramètres des reçus.</p>
         <div class="half-divider"></div>
         <div class="half-menu">
-            <a href="/sales"><span class="menu-icon">SI</span><strong>Sales / Invoices</strong><span class="arrow">&gt;</span></a>
-            <a href="/fidelity"><span class="menu-icon">FC</span><strong>Fidelity Clients</strong><span class="arrow">&gt;</span></a>
-            <a href="/vat"><span class="menu-icon">TX</span><strong>VAT</strong><span class="arrow">&gt;</span></a>
-            <a href="/float"><span class="menu-icon">FL</span><strong>Float</strong><span class="arrow">&gt;</span></a>
-            <a href="/takings"><span class="menu-icon">TK</span><strong>Takings</strong><span class="arrow">&gt;</span></a>
-            <a href="/daily-sales"><span class="menu-icon">DS</span><strong>Daily Sales</strong><span class="arrow">&gt;</span></a>
-            <a href="/daily-takings"><span class="menu-icon">DT</span><strong>Daily Takings</strong><span class="arrow">&gt;</span></a>
-            <a href="/reports"><span class="menu-icon">RP</span><strong>Reports</strong><span class="arrow">&gt;</span></a>
-            <a href="/billing"><span class="menu-icon">SB</span><strong>Subscription Billing</strong><span class="arrow">&gt;</span></a>
-            <a href="/settings/receipt"><span class="menu-icon">RS</span><strong>Receipt Settings</strong><span class="arrow">&gt;</span></a>
+            <a href="/sales"><span class="menu-icon">SI</span><strong>Ventes / Factures</strong><span class="arrow">&gt;</span></a>
+            <a href="/fidelity"><span class="menu-icon">FC</span><strong>Clients fidélité</strong><span class="arrow">&gt;</span></a>
+            <a href="/vat"><span class="menu-icon">TX</span><strong>TVA</strong><span class="arrow">&gt;</span></a>
+            <a href="/float"><span class="menu-icon">FL</span><strong>Fond de caisse</strong><span class="arrow">&gt;</span></a>
+            <a href="/takings"><span class="menu-icon">TK</span><strong>Recettes</strong><span class="arrow">&gt;</span></a>
+            <a href="/daily-sales"><span class="menu-icon">DS</span><strong>Ventes quotidiennes</strong><span class="arrow">&gt;</span></a>
+            <a href="/daily-takings"><span class="menu-icon">DT</span><strong>Recettes quotidiennes</strong><span class="arrow">&gt;</span></a>
+            <a href="/reports"><span class="menu-icon">RP</span><strong>Rapports</strong><span class="arrow">&gt;</span></a>
+            <a href="/billing"><span class="menu-icon">SB</span><strong>Facturation de l'abonnement</strong><span class="arrow">&gt;</span></a>
+            <a href="/settings/receipt"><span class="menu-icon">RS</span><strong>Paramètres des reçus</strong><span class="arrow">&gt;</span></a>
         </div>
     </article>
 </section>
