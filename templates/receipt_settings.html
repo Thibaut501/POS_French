@@ -1,0 +1,68 @@
+﻿{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <h2>Receipt Settings</h2>
+    <p class="muted">These details print on every E-PoS receipt below the MRA QR section.</p>
+
+    {% if error %}<div class="error" style="margin-bottom:12px;">{{ error }}</div>{% endif %}
+    {% if success %}<div class="success" style="margin-bottom:12px;">✓ {{ success }}</div>{% endif %}
+
+    <form method="post">
+        <fieldset class="fieldset-section">
+            <legend>Business Details</legend>
+            <div class="form-grid">
+                <div>
+                    <label for="business-name">Business Name</label>
+                    <input id="business-name" name="business_name" type="text"
+                           value="{{ settings.get('receipt_business_name', '') }}" required>
+                </div>
+                <div>
+                    <label for="business-line-1">Address Line 1</label>
+                    <input id="business-line-1" name="business_line_1" type="text"
+                           value="{{ settings.get('receipt_business_line_1', '') }}">
+                </div>
+                <div>
+                    <label for="business-line-2">Address Line 2</label>
+                    <input id="business-line-2" name="business_line_2" type="text"
+                           value="{{ settings.get('receipt_business_line_2', '') }}">
+                </div>
+                <div>
+                    <label for="tel">Telephone</label>
+                    <input id="tel" name="tel" type="text"
+                           value="{{ settings.get('receipt_tel', '') }}">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset-section">
+            <legend>Tax and Fiscal Details</legend>
+            <div class="form-grid">
+                <div>
+                    <label for="vat-reg-no">VAT Registration Number</label>
+                    <input id="vat-reg-no" name="vat_reg_no" type="text"
+                           placeholder="e.g. VAT28014468"
+                           value="{{ settings.get('receipt_vat_reg_no', '') }}" required>
+                </div>
+                <div>
+                    <label for="brn">BRN</label>
+                    <input id="brn" name="brn" type="text"
+                           placeholder="e.g. C22185904"
+                           value="{{ settings.get('receipt_brn', '') }}" required>
+                </div>
+                <div>
+                    <label for="terminal-id">Terminal ID</label>
+                    <input id="terminal-id" name="terminal_id" type="text"
+                           value="{{ settings.get('receipt_terminal_id', '') }}">
+                </div>
+            </div>
+        </fieldset>
+
+        <div style="margin-top:20px;">
+            <button type="submit">Save Receipt Settings</button>
+            <a class="button-link" href="/sales">Back</a>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

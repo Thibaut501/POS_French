@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Record purchase / stock in</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post" class="form-grid" id="purchase-form">
+
+        <fieldset class="fieldset-section">
+            <legend>Product &amp; Quantity</legend>
+            <div class="form-grid fieldset-inner">
+                <div>
+                    <label for="p-date">Purchase date</label>
+                    <input id="p-date" name="date" type="date" value="{{ today }}" required>
+                </div>
+                <div>
+                    <label for="p-product">Product</label>
+                    <select id="p-product" name="product_id" required aria-label="Product">
+                        {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.sku }} – {{ p.name }} (default Rs {{ "%.2f"|format(p.cost_price) }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="p-qty">Quantity</label>
+                    <input id="p-qty" name="qty" type="number" min="1" placeholder="Qty" required>
+                </div>
+                <div>
+                    <label for="p-cost">Unit cost (Rs)</label>
+                    <input id="p-cost" name="unit_cost" type="number" step="0.01" placeholder="Override cost (optional)">
+                </div>
+                <div>
+                    <label for="p-expiry">Expiry date</label>
+                    <input id="p-expiry" name="expiry_date" type="date" title="Expiry date of the goods">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset-section">
+            <legend>Supplier &amp; Invoice</legend>
+            <div class="form-grid fieldset-inner">
+                <div>
+                    <label for="p-supplier">Supplier name</label>
+                    <input id="p-supplier" name="supplier_name" placeholder="e.g. ABC Distributors">
+                </div>
+                <div>
+                    <label for="p-invoice">Invoice number</label>
+                    <input id="p-invoice" name="invoice_number" placeholder="e.g. INV-2026-001">
+                </div>
+                <div>
+                    <label for="p-contact">Contact person</label>
+                    <input id="p-contact" name="contact_person" placeholder="e.g. John Smith">
+                </div>
+                <div>
+                    <label for="p-email">Contact email</label>
+                    <input id="p-email" name="contact_email" type="email" placeholder="e.g. john@abc.com">
+                </div>
+                <div>
+                    <label for="p-phone">Contact phone</label>
+                    <input id="p-phone" name="contact_phone" type="tel" placeholder="e.g. +230 5XXX XXXX">
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="span-3">
+            <button type="submit">Save purchase</button>
+        </div>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Purchase history</h2>
+    <a class="button-link" href="/export/purchases">Export purchases CSV</a>
+    <div class="table-wrap">
+    <table>
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Supplier</th>
+            <th>Invoice No.</th>
+            <th>SKU</th>
+            <th>Product</th>
+            <th>Cat.</th>
+            <th>Qty</th>
+            <th>Unit cost</th>
+            <th>Amt ex-VAT</th>
+            <th>VAT</th>
+            <th>Total (incl.)</th>
+            <th>Expiry</th>
+            <th>Contact</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in rows %}
+        <tr>
+            <td>{{ r.date }}</td>
+            <td>{{ r.supplier_name or '—' }}</td>
+            <td>{{ r.invoice_number or '—' }}</td>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.category }}</td>
+            <td>{{ r.qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.unit_cost) }}</td>
+            <td>Rs {{ "%.2f"|format(r.amount_ex_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.vat_amount) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total) }}</td>
+            <td>{{ r.expiry_date or '—' }}</td>
+            <td>
+                {% if r.contact_person or r.contact_email or r.contact_phone %}
+                <span title="{{ r.contact_person }}{% if r.contact_email %} | {{ r.contact_email }}{% endif %}{% if r.contact_phone %} | {{ r.contact_phone }}{% endif %}">
+                    {{ r.contact_person or '' }}{% if r.contact_email %}<br><small>{{ r.contact_email }}</small>{% endif %}{% if r.contact_phone %}<br><small>{{ r.contact_phone }}</small>{% endif %}
+                </span>
+                {% else %}—{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}

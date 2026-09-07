@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Edit product: {{ product.name }}</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post" class="edit-form">
+        <label for="edit-sku">SKU / Barcode</label>
+        <input id="edit-sku" name="sku" value="{{ product.sku }}" required>
+        <label for="edit-name">Product name</label>
+        <input id="edit-name" name="name" value="{{ product.name }}" required>
+        <label for="edit-brand">Brand</label>
+        <input id="edit-brand" name="brand" value="{{ product.brand or '' }}" placeholder="e.g. Coca-Cola, Nestle">
+        <label for="edit-lodgement">Size / Unit (Lodgement)</label>
+        <input id="edit-lodgement" name="lodgement" value="{{ product.lodgement or '' }}" placeholder="e.g. 500ml, 100gms, 1L">
+        <label for="edit-category">Product category</label>
+        <select id="edit-category" name="category" aria-label="Product category">
+            {% for c in categories %}
+            <option value="{{ c.name }}" {% if product.category == c.name %}selected{% endif %}>{{ c.name }} ({{ c.vat_treatment }})</option>
+            {% endfor %}
+        </select>
+        {% if current_user.is_admin %}
+        <a class="button-link" href="/categories">+ Add / Manage Category</a>
+        {% endif %}
+        <label for="edit-cost">Cost price (Rs)</label>
+        <input id="edit-cost" name="cost_price" type="number" step="0.01" value="{{ product.cost_price }}" required>
+        <label for="edit-sell">Selling price (Rs)</label>
+        <input id="edit-sell" name="selling_price" type="number" step="0.01" value="{{ product.selling_price }}" required>
+        <label for="edit-low">Low stock alert level</label>
+        <input id="edit-low" name="low_stock_level" type="number" value="{{ product.low_stock_level }}">
+        <div class="edit-form-actions">
+            <button type="submit">💾 Save changes</button>
+            <a class="button-link secondary-btn" href="/products">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

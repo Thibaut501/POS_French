@@ -1,0 +1,75 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Calibri;}{\f1 Consolas;}}
+\fs28\b POS V3 LAN Access Instructions\b0\par
+\par
+\fs22 Use this guide when one computer runs POS V3 and another computer connects to it from the same Wi-Fi or Ethernet network.\par
+\par
+\b 1. Start the server on the main POS computer\b0\par
+\par
+Open PowerShell and run:\par
+\par
+{\f1 cd "C:\\Users\\Portable\\Documents\\pos_v3_mauritius_products_left_billing_right (1)\\pos_v3_mauritius_professional_dashboard"\par
+.\\start-lan-server.ps1\par}
+\par
+Keep the PowerShell window open while using POS V3.\par
+\par
+\b 2. Open POS V3 on the other computer\b0\par
+\par
+On the other computer, open a browser and go to:\par
+\par
+{\f1 http://192.168.100.3:8080\par}
+\par
+Both computers must be connected to the same Wi-Fi or Ethernet network.\par
+\par
+\b 3. Login\b0\par
+\par
+Default administrator login:\par
+\par
+{\f1 Username: admin\par
+Password: admin123\par}
+\par
+Change the default password after setup.\par
+\par
+\b 4. If the other computer cannot connect\b0\par
+\par
+Windows Firewall may be blocking the connection. Open PowerShell as Administrator and run:\par
+\par
+{\f1 cd "C:\\Users\\Portable\\Documents\\pos_v3_mauritius_products_left_billing_right (1)\\pos_v3_mauritius_professional_dashboard"\par
+.\\start-lan-server.ps1 -OpenFirewall\par}
+\par
+If Windows shows this Wi-Fi or Ethernet network as Public, either change the network profile to Private in Windows Settings, or use this on a trusted network only:\par
+\par
+{\f1 .\\start-lan-server.ps1 -OpenFirewall -AllowPublicNetwork\par}
+\par
+You can also double-click open-pos-firewall-admin.bat and approve the Windows administrator prompt.\par
+\par
+Then try again from the other computer:\par
+\par
+{\f1 http://192.168.100.3:8080\par}
+\par
+\b 5. If port 8080 is already used\b0\par
+\par
+Start POS V3 on another port:\par
+\par
+{\f1 .\\start-lan-server.ps1 -Port 8090\par}
+\par
+Then connect from the other computer with:\par
+\par
+{\f1 http://192.168.100.3:8090\par}
+\par
+\b 6. Use only the IP address\b0\par
+\par
+To open POS V3 on the other computer with only the IP address, run POS V3 on port 80.\par
+\par
+On the main POS computer, double-click:\par
+\par
+{\f1 start-ip-only-server-admin.bat\par}
+\par
+Approve the Windows administrator prompt. Then open this on the other computer:\par
+\par
+{\f1 http://192.168.100.3\par}
+\par
+\b Security note\b0\par
+\par
+Only use this on a trusted local network. Do not expose this POS system directly to the public internet.\par
+}

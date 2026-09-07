@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VAT Receipt #{{ receipt.id }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .receipt-wrap {
+            max-width: 520px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12);
+            font-family: monospace;
+        }
+        .receipt-head { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
+        .receipt-head h2 { margin: 0 0 4px 0; font-size: 18px; }
+        .receipt-head .vat-label { font-weight: bold; font-size: 13px; letter-spacing: 1px; border: 1px solid #333; display: inline-block; padding: 2px 8px; margin: 4px 0; }
+        .receipt-lines { width: 100%; border-collapse: collapse; }
+        .receipt-lines td, .receipt-lines th { font-size: 12px; padding: 5px 3px; }
+        .receipt-lines th { border-bottom: 1px solid #999; }
+        .item-meta { font-size: 11px; color: #555; }
+        .totals { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 8px; }
+        .totals table { width: 100%; }
+        .totals td { font-size: 13px; padding: 3px 2px; }
+        .totals .grand-total td { font-size: 15px; font-weight: bold; border-top: 1px solid #333; padding-top: 6px; }
+        .vat-summary { margin-top: 10px; border-top: 1px dashed #aaa; padding-top: 8px; font-size: 11px; }
+        .receipt-footer { text-align: center; margin-top: 12px; font-size: 11px; color: #666; border-top: 1px dashed #aaa; padding-top: 8px; }
+        .receipt-actions { display: flex; gap: 10px; margin-top: 14px; }
+        .receipt-actions a, .receipt-actions button {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: #fff;
+            background: #2563eb;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .receipt-actions .secondary { background: #334155; }
+        @media print {
+            body { background: #fff; }
+            .receipt-wrap { box-shadow: none; margin: 0; max-width: none; }
+            .receipt-actions { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="receipt-wrap">
+    <div class="receipt-head">
+        <h2>Mauritius POS V3</h2>
+        <span class="vat-label">TAX INVOICE</span>
+        <p class="receipt-meta">VAT Reg. No: ___________________</p>
+        <p class="receipt-meta">Receipt #{{ receipt.id }} &nbsp;|&nbsp; Date: {{ receipt.date }}</p>
+        <p class="receipt-meta">Cashier: {{ receipt.full_name }} ({{ receipt.username }})</p>
+    </div>
+
+    <table class="receipt-lines">
+        <thead>
+            <tr>
+                <th class="text-left">Item</th>
+                <th class="text-right">Qty</th>
+                <th class="text-right">Unit</th>
+                <th class="text-right">Amt (Rs)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in items %}
+        <tr>
+            <td>
+                <div>{{ i.name }}</div>
+                <div class="item-meta">
+                    {% if i.brand %}{{ i.brand }}{% endif %}
+                    {% if i.lodgement %} &mdash; {{ i.lodgement }}{% endif %}
+                    &nbsp;[{{ i.sku }}]
+                    {% if i.category == 'Standard' %}<span class="vat-standard"> &bull; VAT 15%</span>
+                    {% elif i.category == 'Zero' %}<span class="vat-zero"> &bull; Zero-rated</span>
+                    {% else %}<span class="vat-exempt"> &bull; Exempt</span>{% endif %}
+                </div>
+            </td>
+            <td class="text-right">{{ i.qty }}</td>
+            <td class="text-right">{{ "%.2f"|format(i.unit_price) }}</td>
+            <td class="text-right">{{ "%.2f"|format(i.total) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <table>
+            <tr><td>Subtotal (excl. VAT)</td><td class="text-right">Rs {{ "%.2f"|format(receipt.subtotal - receipt.output_vat) }}</td></tr>
+            <tr><td>VAT (15% on standard items)</td><td class="text-right">Rs {{ "%.2f"|format(receipt.output_vat) }}</td></tr>
+            <tr class="grand-total"><td>TOTAL</td><td class="text-right">Rs {{ "%.2f"|format(receipt.total) }}</td></tr>
+        </table>
+    </div>
+
+    {% set std_items = items | selectattr('category', 'equalto', 'Standard') | list %}
+    {% set zero_items = items | selectattr('category', 'equalto', 'Zero') | list %}
+    {% set exempt_items = items | selectattr('category', 'equalto', 'Exempt') | list %}
+    <div class="vat-summary">
+        <strong>VAT Summary</strong><br>
+        {% if std_items %}
+        Standard (15%): Rs {{ "%.2f"|format(std_items | sum(attribute='total')) }} incl.
+        &nbsp;VAT: Rs {{ "%.2f"|format(receipt.output_vat) }}<br>
+        {% endif %}
+        {% if zero_items %}
+        Zero-rated (0%): Rs {{ "%.2f"|format(zero_items | sum(attribute='total')) }}<br>
+        {% endif %}
+        {% if exempt_items %}
+        Exempt: Rs {{ "%.2f"|format(exempt_items | sum(attribute='total')) }}<br>
+        {% endif %}
+    </div>
+
+    <div class="receipt-footer">
+        <strong>Payment: {{ receipt.payment_method }}</strong>
+        {% if receipt.payment_reference %} &mdash; Ref: {{ receipt.payment_reference }}{% endif %}<br>
+        Thank you for your purchase!<br>
+        Printed: {{ receipt.date }}
+    </div>
+
+    <div class="receipt-actions">
+        <button onclick="window.print()">Print receipt</button>
+        <a class="secondary" href="/sales">Back to sales</a>
+    </div>
+</div>
+</body>
+</html>

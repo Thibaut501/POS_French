@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="login-welcome">
+    <div class="login-welcome-copy">
+        <span class="login-kicker">JOSEA OUTSOURCING LTD</span>
+        <h2>Welcome to Mauritius POS V3</h2>
+        <p>Manage sales, stock, purchases and daily takings from one secure workspace.</p>
+    </div>
+    <section class="panel login-panel">
+        <h2>Sign in to continue</h2>
+    <form method="post" class="form-grid login-grid">
+        <input name="username" placeholder="Username" required>
+        <input name="password" type="password" placeholder="Password" required>
+        <label class="terms-check-label">
+            <input type="checkbox" name="terms_accepted" value="1" required>
+            I have read and agree to the
+            <a href="/terms" target="_blank">Terms of Use</a>
+            and
+            <a href="/privacy" target="_blank">Privacy Policy</a>.
+        </label>
+        <button type="submit">Login</button>
+    </form>
+    </section>
+</section>
+{% endblock %}

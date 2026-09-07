@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel login-panel">
+    <h2>My account</h2>
+    {% if success %}<div class="success">{{ success }}</div>{% endif %}
+    <form method="post" class="form-grid login-grid">
+        <input name="current_password" type="password" placeholder="Current password" required>
+        <input name="new_password" type="password" placeholder="New password" required>
+        <input name="confirm_password" type="password" placeholder="Confirm new password" required>
+        <button type="submit">Update password</button>
+    </form>
+</section>
+{% endblock %}

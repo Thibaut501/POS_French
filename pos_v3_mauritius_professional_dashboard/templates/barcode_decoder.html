@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Decode barcode from image</h2>
+    {% if not barcode_reader_enabled %}
+    <div class="error">Barcode decoder not available. Install: pip install pyzbar pillow</div>
+    {% else %}
+    <p class="muted">Upload an image of a product barcode to look it up in the system.</p>
+    <form method="post" enctype="multipart/form-data" class="form-grid">
+        <input type="file" name="barcode_image" accept="image/*" title="Barcode image" required>
+        <button type="submit">Decode barcode</button>
+    </form>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+    <div class="success">
+        <h3>Product found!</h3>
+        <p><strong>SKU:</strong> {{ result.sku }}</p>
+        <p><strong>Name:</strong> {{ result.name }}</p>
+        <p><strong>Category:</strong> {{ result.category }}</p>
+        <p><strong>Selling price:</strong> Rs {{ "%.2f"|format(result.selling_price) }}</p>
+    </div>
+    {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

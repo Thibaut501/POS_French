@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Generate & print barcodes</h2>
+    {% if not barcode_enabled %}
+    <div class="error">Barcode generation not available. Install: pip install python-barcode[images]</div>
+    {% else %}
+    <p class="muted">Generate barcode images for products to print and stick on items.</p>
+    <div class="table-wrap">
+    <table>
+        <tr><th>SKU</th><th>Product</th><th>Category</th><th>Selling price</th><th>Download barcode</th></tr>
+        {% for p in products %}
+        <tr>
+            <td>{{ p.sku }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.category }}</td>
+            <td>Rs {{ "%.2f"|format(p.selling_price) }}</td>
+            <td>
+                <a class="button-link" href="/barcode/{{ p.id }}?format=png">PNG</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <p class="muted">Right-click PNG links and select "Save image as..." to download. Print at actual size for best results.</p>
+    {% endif %}
+</section>
+{% endblock %}

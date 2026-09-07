@@ -1,0 +1,334 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 2410 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+/F1 18 Tf
+(POS V3 EXE Build Manual) Tj
+0 -23 Td
+/F1 10 Tf
+() Tj
+0 -15 Td
+/F1 12 Tf
+(Mauritius POS V3 - Josea Outsourcing Ltd) Tj
+0 -17 Td
+/F1 10 Tf
+(Document version 1.1 - June 2026) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Purpose) Tj
+0 -19 Td
+/F1 10 Tf
+(This manual explains how to package POS V3 Mauritius as a standalone Windows executable,) Tj
+0 -15 Td
+(prepare the distribution folder, and verify that the packaged app still supports the current) Tj
+0 -15 Td
+(production features: sales, VAT, stock, barcode tools, float, takings, backups, licensing,) Tj
+0 -15 Td
+(and optional billing.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Build Output) Tj
+0 -19 Td
+/F1 10 Tf
+(The build script creates a one-folder PyInstaller bundle.) Tj
+0 -15 Td
+/F1 9 Tf
+(  dist\\pos_v3\\pos_v3.exe) Tj
+0 -14 Td
+/F1 10 Tf
+(Ship the full dist\\pos_v3 folder, not only the EXE. The folder contains the executable plus) Tj
+0 -15 Td
+(bundled templates, static files, database assets, and runtime files copied after the build.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Prerequisites) Tj
+0 -19 Td
+/F1 10 Tf
+(- Windows 10 or Windows 11 build machine.) Tj
+0 -15 Td
+(- Python 3.11 or 3.12.) Tj
+0 -15 Td
+(- Project dependencies installed from the packaged requirements.txt.) Tj
+0 -15 Td
+(- PyInstaller installed.) Tj
+0 -15 Td
+(- Optional: PyArmor if using the -Obfuscate build option.) Tj
+0 -15 Td
+(- Vendor private key kept on the vendor machine only.) Tj
+0 -15 Td
+/F1 9 Tf
+(  pip install -r pos_v3_mauritius_professional_dashboard\\requirements.txt) Tj
+0 -14 Td
+(  pip install pyinstaller) Tj
+0 -14 Td
+/F1 10 Tf
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Standard Build) Tj
+0 -19 Td
+/F1 10 Tf
+(1. Open PowerShell in the repository root.) Tj
+0 -15 Td
+(2. Activate the virtual environment.) Tj
+0 -15 Td
+(3. Run the build script.) Tj
+0 -15 Td
+(4. Wait for PyInstaller to complete.) Tj
+0 -15 Td
+(5. Review the final dist\\pos_v3 folder.) Tj
+0 -15 Td
+/F1 9 Tf
+(  .\\.venv\\Scripts\\Activate.ps1) Tj
+0 -14 Td
+(  .\\build.ps1) Tj
+0 -14 Td
+/F1 10 Tf
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Clean Build) Tj
+0 -19 Td
+/F1 10 Tf
+(Use a clean build when old PyInstaller output may be stale.) Tj
+0 -15 Td
+/F1 9 Tf
+(  .\\build.ps1 -Clean) Tj
+0 -14 Td
+/F1 10 Tf
+(The clean option removes build artifacts before packaging. Re-check dist\\pos_v3 after the) Tj
+0 -15 Td
+(build finishes.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Optional Obfuscated Build) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 2911 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+(If PyArmor is installed and source obfuscation is required, run:) Tj
+0 -15 Td
+/F1 9 Tf
+(  .\\build.ps1 -Obfuscate) Tj
+0 -14 Td
+/F1 10 Tf
+(The build script obfuscates serve.py, app.py, license_manager.py, and keygen.py, then) Tj
+0 -15 Td
+(packages the obfuscated serve.py entry point.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Bundled Data and Hidden Imports) Tj
+0 -19 Td
+/F1 10 Tf
+(The PyInstaller configuration bundles templates, static assets, and database files. Hidden) Tj
+0 -15 Td
+(imports include Flask, Waitress, schedule, cryptography modules, python-barcode, pyzbar,) Tj
+0 -15 Td
+(Pillow, Stripe, SQLAlchemy, Alembic, pyodbc, email/smtp modules, sqlite3, uuid, subprocess,) Tj
+0 -15 Td
+(and platform.) Tj
+0 -15 Td
+(Excluded modules are tkinter, matplotlib, numpy, and pandas to reduce package size.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Files to Include in Customer Distribution) Tj
+0 -19 Td
+/F1 10 Tf
+(- The complete dist\\pos_v3 folder.) Tj
+0 -15 Td
+(- start.ps1 copied by the build script.) Tj
+0 -15 Td
+(- .env.example copied by the build script, if present.) Tj
+0 -15 Td
+(- vendor_public.pem.) Tj
+0 -15 Td
+(- A customer-specific license.key after the license is issued.) Tj
+0 -15 Td
+(- Updated README.md, INSTALL.md, and this build manual when shipping staff documentation.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Files Never to Include) Tj
+0 -19 Td
+/F1 10 Tf
+(- vendor_private.pem.) Tj
+0 -15 Td
+(- Local virtual environments.) Tj
+0 -15 Td
+(- Build-machine backup archives.) Tj
+0 -15 Td
+(- Test client databases unless intentionally migrating a client.) Tj
+0 -15 Td
+(- Unencrypted client data exports.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(License Preparation) Tj
+0 -19 Td
+/F1 10 Tf
+(1. On the customer machine, obtain the hardware fingerprint using keygen.py fingerprint or) Tj
+0 -15 Td
+(   the License page.) Tj
+0 -15 Td
+(2. On the vendor laptop, issue the license with keygen.py issue.) Tj
+0 -15 Td
+(3. Copy the generated license file into dist\\pos_v3.) Tj
+0 -15 Td
+(4. Rename it to license.key.) Tj
+0 -15 Td
+(5. Set LICENSE_ENFORCE=true and LICENSE_FILE=license.key in the runtime environment or) Tj
+0 -15 Td
+(   start script.) Tj
+0 -15 Td
+/F1 9 Tf
+(  python keygen.py issue --company "Client Name" --company-id "client-001" --days 365 --hardware-fp <fingerprint>) Tj
+0 -14 Td
+/F1 10 Tf
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Runtime Configuration Checklist) Tj
+0 -19 Td
+/F1 10 Tf
+(- FLASK_SECRET_KEY is set to a strong random value.) Tj
+0 -15 Td
+(- HOST is 0.0.0.0 when LAN access is required.) Tj
+0 -15 Td
+(- PORT is the agreed local port, normally 8080.) Tj
+0 -15 Td
+(- LICENSE_ENFORCE is true for client deployments.) Tj
+0 -15 Td
+(- LICENSE_FILE points to license.key or an HTTPS license URL.) Tj
+0 -15 Td
+(- APP_ENFORCE_BILLING is false unless Stripe billing is active.) Tj
+0 -15 Td
+(- Email settings are configured in the app if backup or operational emails are required.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 1802 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Post-Build Smoke Test) Tj
+0 -19 Td
+/F1 10 Tf
+(1. Start dist\\pos_v3\\pos_v3.exe or run start.ps1 from dist\\pos_v3.) Tj
+0 -15 Td
+(2. Open http://localhost:8080, or the configured host and port.) Tj
+0 -15 Td
+(3. Log in with the admin account and change the default password if this is a client) Tj
+0 -15 Td
+(   environment.) Tj
+0 -15 Td
+(4. Confirm License shows valid details.) Tj
+0 -15 Td
+(5. Create a test product with a SKU/barcode.) Tj
+0 -15 Td
+(6. Open Barcodes and confirm a label can be generated.) Tj
+0 -15 Td
+(7. Open Sales, scan or type the SKU, finalize a receipt, and print preview.) Tj
+0 -15 Td
+(8. Record a purchase and confirm Stock updates.) Tj
+0 -15 Td
+(9. Open Physical Stock and Stock Variance.) Tj
+0 -15 Td
+(10. Record Float and Takings values.) Tj
+0 -15 Td
+(11. Open Daily Sales, Daily Purchases, Daily Takings, Reports, and VAT.) Tj
+0 -15 Td
+(12. Download an encrypted backup from Database Maintenance.) Tj
+0 -15 Td
+(13. Confirm Audit Logs record the expected actions.) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+/F1 14 Tf
+(Troubleshooting) Tj
+0 -19 Td
+/F1 10 Tf
+(- If PyInstaller misses a module, add it to the HiddenImports list in build.ps1 and) Tj
+0 -15 Td
+(   rebuild.) Tj
+0 -15 Td
+(- If templates or styles are missing, confirm the --add-data entries include templates and) Tj
+0 -15 Td
+(   static.) Tj
+0 -15 Td
+(- If barcode decoding fails in the EXE, confirm pyzbar and its native dependencies are) Tj
+0 -15 Td
+(   available in the packaged environment.) Tj
+0 -15 Td
+(- If Stripe or SQL modules fail on startup, confirm the matching hidden imports remain in) Tj
+0 -15 Td
+(   the build script.) Tj
+0 -15 Td
+(- If the app opens but license fails, verify the fingerprint, license.key filename, and) Tj
+0 -15 Td
+(   LICENSE_FILE setting.) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 8 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000127 00000 n 
+0000000197 00000 n 
+0000002659 00000 n 
+0000002785 00000 n 
+0000005748 00000 n 
+0000005874 00000 n 
+0000007728 00000 n 
+trailer << /Size 10 /Root 1 0 R >>
+startxref
+7854
+%%EOF

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Scan / Add item to cart</h2>
+    <p class="muted">Use a USB/Bluetooth barcode reader in keyboard mode and scan into the first field.</p>
+    <form method="post" class="form-grid" id="sale-form">
+        <input id="barcode" name="barcode" placeholder="Scan barcode / type SKU" autocomplete="off" autofocus>
+        <input name="date" type="date" value="{{ today }}" title="Sale date" aria-label="Sale date">
+        <select name="product_id" title="Select product" aria-label="Select product">
+            <option value="">Select product manually (optional)</option>
+            {% for p in products %}
+            <option value="{{ p.id }}">{{ p.sku }} - {{ p.name }} (Rs {{ "%.2f"|format(p.selling_price) }})</option>
+            {% endfor %}
+        </select>
+        <input name="qty" type="number" min="1" value="1" placeholder="Quantity" required>
+        <button type="submit" name="action" value="add">Add to cart</button>
+    </form>
+    <p class="muted">SDK: <code>POST /api/scanner-sale</code> with <code>{"barcode": "SKU", "qty": 1}</code></p>
+</section>
+
+<section class="panel">
+    <h2>Current cart</h2>
+    {% if cart_rows %}
+    <div class="table-wrap">
+    <table>
+        <tr><th>SKU</th><th>Product</th><th>Brand</th><th>Size</th><th>Qty</th><th>Unit</th><th>Line total</th><th>VAT</th><th>Remove</th></tr>
+        {% for r in cart_rows %}
+        <tr>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.brand }}</td>
+            <td>{{ r.lodgement }}</td>
+            <td>{{ r.qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.unit_price) }}</td>
+            <td>Rs {{ "%.2f"|format(r.line_total) }}</td>
+            <td>Rs {{ "%.2f"|format(r.line_vat) }}</td>
+            <td>
+                <form method="post" class="form-inline" onsubmit="return confirm('Remove {{ r.name }} from cart?')">
+                    <input type="hidden" name="remove_product_id" value="{{ r.product_id }}">
+                    <button type="submit" name="action" value="remove" class="secondary-btn btn-xs">✕</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <p><strong>Cart subtotal:</strong> Rs {{ "%.2f"|format(cart_total) }} | <strong>Cart VAT:</strong> Rs {{ "%.2f"|format(cart_vat) }}</p>
+    <form method="post" class="action-row">
+        <input name="date" type="date" value="{{ today }}" title="Finalize date" aria-label="Finalize date">
+        <select name="payment_method" aria-label="Payment method" title="Payment method" required>
+            {% for pm in payment_methods %}
+            <option value="{{ pm }}">{{ pm }}</option>
+            {% endfor %}
+        </select>
+        <input name="payment_reference" placeholder="Ref / last 4 digits (optional)" aria-label="Payment reference">
+        <button type="submit" name="action" value="finalize">Finalize and print receipt</button>
+        <button name="action" value="clear" class="secondary-btn" type="submit">Clear cart</button>
+    </form>
+    {% else %}
+    <p>Cart is empty.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <h2>Sales history</h2>
+    <a class="button-link" href="/export/sales">Export sales CSV</a>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Date</th><th>Receipt</th><th>SKU</th><th>Product</th><th>Category</th><th>Qty</th><th>Total</th><th>VAT</th><th>Cashier</th></tr>
+        {% for r in rows %}
+        <tr>
+            <td>{{ r.date }}</td>
+            <td>
+                {% if r.receipt_id %}
+                <a href="/receipt/{{ r.receipt_id }}">#{{ r.receipt_id }}</a>
+                {% else %}
+                n/a
+                {% endif %}
+            </td>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.category }}</td>
+            <td>{{ r.qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.total) }}</td>
+            <td>Rs {{ "%.2f"|format(r.output_vat) }}</td>
+            <td>{{ r.cashier_username or "n/a" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</section>
+
+<script>
+    const barcodeInput = document.getElementById("barcode");
+    const saleForm = document.getElementById("sale-form");
+
+    if (barcodeInput && saleForm) {
+        barcodeInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && barcodeInput.value.trim()) {
+                event.preventDefault();
+                saleForm.submit();
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+# Sensitive — never commit
+vendor_private.pem
+*.key
+.env
+
+# Runtime
+pos_v3.db
+backups/
+reports/
+__pycache__/
+.venv/
+*.pyc
+dist/
+build/

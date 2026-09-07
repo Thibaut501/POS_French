@@ -1,0 +1,11 @@
+flask
+python-barcode[images]
+pyzbar
+schedule
+waitress
+stripe
+SQLAlchemy
+alembic
+pyodbc
+cryptography
+pyinstaller

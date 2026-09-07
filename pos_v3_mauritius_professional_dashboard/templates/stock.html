@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+<h2>Stock control</h2>
+<div class="table-wrap">
+<table>
+<tr><th>SKU</th><th>Product</th><th>Category</th><th>Current stock</th><th>Status</th></tr>
+{% for r in rows %}
+<tr>
+<td>{{ r.product.sku }}</td>
+<td>{{ r.product.name }}</td>
+<td>{{ r.product.category }}</td>
+<td>{{ r.stock }}</td>
+<td>
+{% if r.negative %}<b class="danger">NEGATIVE</b>
+{% elif r.low %}<b class="warn">LOW</b>
+{% else %}OK{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <h2>Reports</h2>
+
+    <form method="get" class="action-row" style="margin-bottom:20px;">
+        <label for="r-from">From</label>
+        <input id="r-from" name="from_date" type="date" value="{{ from_date }}" required>
+        <label for="r-to">To</label>
+        <input id="r-to" name="to_date" type="date" value="{{ to_date }}" required>
+        <button type="submit">Apply filter</button>
+    </form>
+
+    <p class="muted">Showing data from <strong>{{ from_date }}</strong> to <strong>{{ to_date }}</strong></p>
+</section>
+
+<div id="save-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border-radius:4px;min-width:300px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+        <h3>Save & Email Report</h3>
+        <form id="save-form" style="margin-top:15px;">
+            <input type="hidden" id="report-kind" name="kind">
+            <input type="hidden" name="from_date" value="{{ from_date }}">
+            <input type="hidden" name="to_date" value="{{ to_date }}">
+            
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer;">
+                <input type="checkbox" name="send_email"> Send email copy
+            </label>
+            
+            <div id="email-field" style="display:none;margin-bottom:12px;">
+                <label for="recipient-email">Recipient Email</label>
+                <input id="recipient-email" type="email" name="recipient_email" placeholder="user@example.com">
+            </div>
+            
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+                <button type="button" onclick="closeSaveModal()">Cancel</button>
+                <button type="submit" class="primary">Save Report</button>
+            </div>
+        </form>
+        <div id="save-status" style="margin-top:12px;"></div>
+    </div>
+</div>
+
+<!-- ============ SALES REPORT ============ -->
+<section class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;">Sales Report</h2>
+        <div style="display:flex;gap:8px;">
+            <a class="button-link" href="/export/sales?from_date={{ from_date }}&to_date={{ to_date }}">Export Sales CSV</a>
+            <button type="button" class="button-link" onclick="openSaveModal('sales')">Save & Email</button>
+        </div>
+    </div>
+
+    <div class="grand-box" style="margin-top:14px;">
+        <div>
+            <div class="g-label">Receipts</div>
+            <div class="g-val">{{ sales_totals.receipt_count }}</div>
+        </div>
+        <div>
+            <div class="g-label">Units sold</div>
+            <div class="g-val">{{ sales_totals.grand_qty }}</div>
+        </div>
+        <div>
+            <div class="g-label">Gross revenue (incl. VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(sales_totals.grand_total) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Output VAT</div>
+            <div class="g-val">Rs {{ "%.2f"|format(sales_totals.grand_vat) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Net revenue (ex-VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(sales_totals.grand_total - sales_totals.grand_vat) }}</div>
+        </div>
+    </div>
+
+    {% if sales_summary %}
+    <div class="table-wrap" style="margin-top:14px;">
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Units Sold</th>
+                <th>Revenue (incl. VAT)</th>
+                <th>Output VAT</th>
+                <th>Net Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in sales_summary %}
+        <tr>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.category }}</td>
+            <td>{{ r.total_qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_revenue) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_revenue - r.total_vat) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">Totals</th>
+                <th>{{ sales_totals.grand_qty }}</th>
+                <th>Rs {{ "%.2f"|format(sales_totals.grand_total) }}</th>
+                <th>Rs {{ "%.2f"|format(sales_totals.grand_vat) }}</th>
+                <th>Rs {{ "%.2f"|format(sales_totals.grand_total - sales_totals.grand_vat) }}</th>
+            </tr>
+        </tfoot>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted" style="margin-top:12px;">No sales in this period.</p>
+    {% endif %}
+</section>
+
+<!-- ============ PURCHASES REPORT ============ -->
+<section class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;">Purchases Report</h2>
+        <div style="display:flex;gap:8px;">
+            <a class="button-link" href="/export/purchases?from_date={{ from_date }}&to_date={{ to_date }}">Export Purchases CSV</a>
+            <button type="button" class="button-link" onclick="openSaveModal('purchases')">Save & Email</button>
+        </div>
+    </div>
+
+    <div class="grand-box" style="margin-top:14px;">
+        <div>
+            <div class="g-label">Total ex-VAT</div>
+            <div class="g-val">Rs {{ "%.2f"|format(purchases_totals.grand_ex_vat) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Input VAT</div>
+            <div class="g-val">Rs {{ "%.2f"|format(purchases_totals.grand_vat) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Total incl. VAT</div>
+            <div class="g-val">Rs {{ "%.2f"|format(purchases_totals.grand_total) }}</div>
+        </div>
+    </div>
+
+    {% if purchases_summary %}
+    <div class="table-wrap" style="margin-top:14px;">
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product</th>
+                <th>Supplier</th>
+                <th>Units Received</th>
+                <th>Ex-VAT</th>
+                <th>VAT</th>
+                <th>Total (incl. VAT)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in purchases_summary %}
+        <tr>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.supplier_name or '—' }}</td>
+            <td>{{ r.total_qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_ex_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_incl_vat) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4">Totals</th>
+                <th>Rs {{ "%.2f"|format(purchases_totals.grand_ex_vat) }}</th>
+                <th>Rs {{ "%.2f"|format(purchases_totals.grand_vat) }}</th>
+                <th>Rs {{ "%.2f"|format(purchases_totals.grand_total) }}</th>
+            </tr>
+        </tfoot>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted" style="margin-top:12px;">No purchases in this period.</p>
+    {% endif %}
+</section>
+
+<!-- ============ STOCK REPORT ============ -->
+<section class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;">Stock Report (Period: {{ from_date }} to {{ to_date }})</h2>
+        <div>
+            {% if current_user.is_admin %}
+            <a class="button-link" href="/physical-stock-take">📋 Physical Stock Take</a>
+            {% endif %}
+            <a class="button-link" href="/export/stock">Export Stock CSV</a>
+        </div>
+    </div>
+
+    <div class="grand-box" style="margin-top:14px;">
+        <div>
+            <div class="g-label">Total products</div>
+            <div class="g-val">{{ stock_rows|length }}</div>
+        </div>
+        <div>
+            <div class="g-label">Low / negative stock items</div>
+            <div class="g-val">{{ stock_rows|selectattr('low')|list|length }}</div>
+        </div>
+        <div>
+            <div class="g-label">Opening stock value (cost)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(total_opening_value) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Closing stock value (cost)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(total_closing_value) }}</div>
+        </div>
+    </div>
+
+    {% if stock_rows %}
+    <div class="table-wrap" style="margin-top:14px;">
+    <table>
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Opening Qty</th>
+                <th>Receipts</th>
+                <th>Sales</th>
+                <th>Closing Qty</th>
+                <th>Cost</th>
+                <th>Opening Value</th>
+                <th>Closing Value</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in stock_rows %}
+        <tr>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.category }}</td>
+            <td>{{ r.opening }}</td>
+            <td>+{{ r.receipts }}</td>
+            <td>-{{ r.sales }}</td>
+            <td><strong>{{ r.closing }}</strong></td>
+            <td>Rs {{ "%.2f"|format(r.cost_price) }}</td>
+            <td>Rs {{ "%.2f"|format(r.opening_value) }}</td>
+            <td>Rs {{ "%.2f"|format(r.closing_value) }}</td>
+            <td>
+                {% if r.negative %}<b class="danger">NEGATIVE</b>
+                {% elif r.low %}<b class="warn">LOW</b>
+                {% else %}OK{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="8">Totals</th>
+                <th>Rs {{ "%.2f"|format(total_opening_value) }}</th>
+                <th>Rs {{ "%.2f"|format(total_closing_value) }}</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted" style="margin-top:12px;">No products found.</p>
+    {% endif %}
+</section>
+
+<!-- ============ CASH TAKINGS REPORT ============ -->
+<section class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;">Cash Takings Report</h2>
+        <div style="display:flex;gap:8px;">
+            <a class="button-link" href="/export/takings?from_date={{ from_date }}&to_date={{ to_date }}">Export Takings CSV</a>
+            <button type="button" class="button-link" onclick="openSaveModal('takings')">Save & Email</button>
+        </div>
+    </div>
+
+    <div class="grand-box" style="margin-top:14px;">
+        <div>
+            <div class="g-label">Total receipts</div>
+            <div class="g-val">{{ takings_totals.receipt_count }}</div>
+        </div>
+        <div>
+            <div class="g-label">Gross takings (incl. VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(takings_totals.grand_total) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Output VAT collected</div>
+            <div class="g-val">Rs {{ "%.2f"|format(takings_totals.grand_vat) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Net sales (ex-VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(takings_totals.grand_subtotal - takings_totals.grand_vat) }}</div>
+        </div>
+    </div>
+
+    {% if takings_summary %}
+    <div class="table-wrap" style="margin-top:14px;">
+    <table>
+        <thead>
+            <tr>
+                <th>Payment Method</th>
+                <th>Receipts</th>
+                <th>Net (ex-VAT)</th>
+                <th>VAT</th>
+                <th>Total (incl. VAT)</th>
+                <th>% of Takings</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in takings_summary %}
+        <tr>
+            <td>{{ r.payment_method }}</td>
+            <td>{{ r.receipt_count }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_subtotal - r.total_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total_amount) }}</td>
+            <td>
+                {% if takings_totals.grand_total > 0 %}
+                {{ "%.1f"|format(r.total_amount / takings_totals.grand_total * 100) }}%
+                {% else %}—{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total</th>
+                <th>{{ takings_totals.receipt_count }}</th>
+                <th>Rs {{ "%.2f"|format(takings_totals.grand_subtotal - takings_totals.grand_vat) }}</th>
+                <th>Rs {{ "%.2f"|format(takings_totals.grand_vat) }}</th>
+                <th>Rs {{ "%.2f"|format(takings_totals.grand_total) }}</th>
+                <th>100%</th>
+            </tr>
+        </tfoot>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted" style="margin-top:12px;">No takings recorded in this period.</p>
+    {% endif %}
+</section>
+
+<script>
+function openSaveModal(kind) {
+    document.getElementById('report-kind').value = kind;
+    document.getElementById('save-modal').style.display = 'block';
+}
+
+function closeSaveModal() {
+    document.getElementById('save-modal').style.display = 'none';
+    document.getElementById('save-form').reset();
+    document.getElementById('save-status').innerHTML = '';
+}
+
+document.getElementById('save-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const kind = formData.get('kind');
+    const statusDiv = document.getElementById('save-status');
+    
+    try {
+        const response = await fetch(`/save-report/${kind}`, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        
+        if (result.error) {
+            statusDiv.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+        } else {
+            statusDiv.innerHTML = `<div class="success">✓ ${result.success}</div>`;
+            setTimeout(() => closeSaveModal(), 1500);
+        }
+    } catch(err) {
+        statusDiv.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+    }
+});
+
+document.querySelector('input[name="send_email"]').addEventListener('change', function() {
+    const emailField = document.getElementById('email-field');
+    emailField.style.display = this.checked ? 'block' : 'none';
+});
+
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('save-modal');
+    if (e.target === modal) closeSaveModal();
+});
+</script>
+
+{% endblock %}
+

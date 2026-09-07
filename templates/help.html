@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .help-hero{background:#1a3a5c;color:#fff;border-radius:6px;padding:28px 32px;margin-bottom:24px;}
+  .help-hero h1{margin:0 0 6px;font-size:1.6rem;}
+  .help-hero p{margin:0;opacity:.85;}
+  .help-toc{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
+  .help-toc a{background:#e8f0fe;color:#1a3a5c;padding:7px 14px;border-radius:20px;text-decoration:none;font-size:.9rem;font-weight:500;transition:background .15s;}
+  .help-toc a:hover{background:#c3d4f5;}
+  .help-section{margin-bottom:32px;}
+  .help-section h2{border-bottom:2px solid #e0e0e0;padding-bottom:8px;color:#1a3a5c;font-size:1.2rem;display:flex;align-items:center;gap:8px;}
+  .help-section h2 .badge{font-size:.72rem;background:#f5a623;color:#fff;padding:2px 8px;border-radius:10px;font-weight:600;}
+  .help-section h2 .badge.admin{background:#c0392b;}
+  .help-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:12px;}
+  .help-card{background:#fff;border:1px solid #dde3ed;border-radius:6px;padding:16px 18px;}
+  .help-card h3{margin:0 0 8px;font-size:1rem;color:#222;}
+  .help-card p{margin:0 0 10px;font-size:.88rem;color:#555;line-height:1.5;}
+  .help-card ul{margin:4px 0 10px 0;padding-left:18px;font-size:.87rem;color:#444;line-height:1.7;}
+  .help-card a.btn-link{display:inline-block;font-size:.82rem;background:#1a3a5c;color:#fff;padding:5px 12px;border-radius:4px;text-decoration:none;}
+  .help-card a.btn-link:hover{background:#255080;}
+  .help-tip{background:#fffbe6;border-left:4px solid #f5a623;padding:10px 14px;border-radius:0 4px 4px 0;margin-top:14px;font-size:.87rem;color:#555;}
+  .help-tip strong{color:#c07800;}
+  .help-shortcut{background:#f0f4ff;border-radius:6px;padding:12px 16px;margin-top:10px;}
+  .help-shortcut table{width:100%;border-collapse:collapse;font-size:.87rem;}
+  .help-shortcut td{padding:5px 8px;border-bottom:1px solid #dde3ed;}
+  .help-shortcut td:first-child{font-weight:600;color:#1a3a5c;white-space:nowrap;}
+  kbd{background:#eee;border:1px solid #ccc;border-radius:3px;padding:1px 6px;font-size:.82rem;font-family:monospace;}
+</style>
+
+<div class="help-hero">
+  <h1>Help &amp; User Guide</h1>
+  <p>Mauritius POS V3 — VAT-compliant point-of-sale system. Use the links below to jump to any section.</p>
+</div>
+
+<!-- Table of contents -->
+<div class="help-toc">
+  <a href="#section-sales">Sales &amp; POS</a>
+  <a href="#section-products">Products</a>
+  <a href="#section-purchases">Purchases</a>
+  <a href="#section-stock">Stock</a>
+  <a href="#section-float">Float</a>
+  <a href="#section-takings">Takings</a>
+  <a href="#section-reports">Reports</a>
+  <a href="#section-vat">VAT</a>
+  <a href="#section-barcodes">Barcodes</a>
+  {% if current_user.is_admin %}
+  <a href="#section-physical-stock">Physical Stock</a>
+  <a href="#section-database">Database</a>
+  <a href="#section-users">Users</a>
+  <a href="#section-audit">Audit Logs</a>
+  <a href="#section-email">Email Settings</a>
+  {% endif %}
+</div>
+
+<!-- SALES -->
+<div class="help-section" id="section-sales">
+  <h2>Sales &amp; POS <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Making a Sale</h3>
+      <p>Add items to the cart then finalise to generate a receipt.</p>
+      <ul>
+        <li>Select a product from the dropdown <strong>or</strong> type / scan the SKU/barcode</li>
+        <li>Enter the quantity (defaults to 1)</li>
+        <li>Click <strong>Add to Cart</strong></li>
+        <li>Repeat for more items</li>
+        <li>Choose a <strong>Payment Method</strong>, enter a reference if required</li>
+        <li>Click <strong>Finalise Sale</strong></li>
+      </ul>
+      <a class="btn-link" href="/sales">Go to Sales</a>
+    </div>
+    <div class="help-card">
+      <h3>Cart Management</h3>
+      <p>Review and adjust items before finalising.</p>
+      <ul>
+        <li>The cart shows each item, qty, unit price and line total</li>
+        <li>Use <strong>Remove</strong> next to an item to delete it from the cart</li>
+        <li>Use <strong>Clear Cart</strong> to start over</li>
+        <li>Output VAT is calculated automatically per item based on its VAT category</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Payment Methods Supported</h3>
+      <ul>
+        <li>Cash</li>
+        <li>Credit Card (MCB, SBM, MauBank, AfrAsia)</li>
+        <li>JuiceApp</li>
+        <li>Blink</li>
+        <li>MyT Money</li>
+        <li>Other (with optional reference)</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Receipts</h3>
+      <p>A full receipt is generated after every sale.</p>
+      <ul>
+        <li>Shows all items, VAT breakdown, payment method</li>
+        <li>Can be printed directly from the browser</li>
+        <li>Accessible later from the Sales history list</li>
+      </ul>
+    </div>
+  </div>
+  <div class="help-tip"><strong>Tip:</strong> Scan a barcode with a USB scanner — it populates the SKU field automatically without any extra software.</div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="help-section" id="section-products">
+  <h2>Products <span class="badge">All users (edit: Admin)</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Adding a Product</h3>
+      <ul>
+        <li><strong>SKU</strong> — unique barcode or internal code</li>
+        <li><strong>Name</strong> — product description</li>
+        <li><strong>Brand / Lodgement</strong> — optional fields</li>
+        <li><strong>VAT Category</strong> — Standard (15%), Zero-rated (0%), Exempt</li>
+        <li><strong>Cost Price</strong> — purchase cost per unit</li>
+        <li><strong>Selling Price</strong> — retail price (inclusive of VAT)</li>
+        <li><strong>Low Stock Level</strong> — warning threshold</li>
+      </ul>
+      <a class="btn-link" href="/products">Go to Products</a>
+    </div>
+    <div class="help-card">
+      <h3>Editing &amp; Deleting</h3>
+      <p>Admins can edit any product at any time. Deletion is only permitted for products with <strong>no sales or purchase history</strong> to preserve data integrity.</p>
+      <ul>
+        <li>Products with history show "Cannot delete (has history)"</li>
+        <li>Edit is always available for admins</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>VAT Categories</h3>
+      <ul>
+        <li><strong>Standard</strong> — 15% Mauritius VAT applied on sales</li>
+        <li><strong>Zero-rated</strong> — taxable but at 0% (e.g., exports). Input VAT still recoverable</li>
+        <li><strong>Exempt</strong> — no VAT charged; input VAT not recoverable</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PURCHASES -->
+<div class="help-section" id="section-purchases">
+  <h2>Purchases <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Recording a Purchase</h3>
+      <p>Use this page to receive stock into the system.</p>
+      <ul>
+        <li>Select the product and enter quantity received</li>
+        <li>Enter <strong>Unit Cost</strong> (defaults to product cost price)</li>
+        <li>Fill in supplier details, invoice number and expiry date</li>
+        <li>Input VAT is auto-calculated for Standard and Zero-rated products</li>
+      </ul>
+      <a class="btn-link" href="/purchases">Go to Purchases</a>
+    </div>
+    <div class="help-card">
+      <h3>Fields Explained</h3>
+      <ul>
+        <li><strong>Amount Ex-VAT</strong> — purchase cost before VAT</li>
+        <li><strong>VAT Amount</strong> — input VAT (15% for Standard/Zero)</li>
+        <li><strong>Total incl. VAT</strong> — full invoice value</li>
+        <li><strong>Input VAT</strong> — recorded for your VAT return</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- STOCK -->
+<div class="help-section" id="section-stock">
+  <h2>Stock <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>How Stock Is Calculated</h3>
+      <p>Stock level = total purchases received minus total units sold, for each product.</p>
+      <ul>
+        <li>Rows highlighted in <strong style="color:orange;">amber</strong> are at or below the low-stock threshold</li>
+        <li>Rows highlighted in <strong style="color:red;">red</strong> are negative (oversold)</li>
+        <li>Stock value shown at cost price</li>
+      </ul>
+      <a class="btn-link" href="/stock">Go to Stock</a>
+    </div>
+    <div class="help-card">
+      <h3>Low Stock Alerts</h3>
+      <p>Each product has a configurable <strong>Low Stock Level</strong> set in the Products page. When stock falls to or below that level the dashboard and stock page will flag it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FLOAT -->
+<div class="help-section" id="section-float">
+  <h2>Float Management <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Opening a Float</h3>
+      <p>Start each shift by recording the cash float in the till.</p>
+      <ul>
+        <li>Enter the opening cash amount</li>
+        <li>Click <strong>Open Float</strong></li>
+        <li>Only one float session can be open at a time per cashier</li>
+      </ul>
+      <a class="btn-link" href="/float">Go to Float</a>
+    </div>
+    <div class="help-card">
+      <h3>Closing a Float</h3>
+      <p>At end of shift, count the cash and record the closing amount.</p>
+      <ul>
+        <li>Enter the closing cash amount</li>
+        <li>Click <strong>Close Float</strong></li>
+        <li>The difference between opening and closing is shown in history</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAKINGS -->
+<div class="help-section" id="section-takings">
+  <h2>Cash Takings <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Daily Takings View</h3>
+      <p>Summary of all receipts for a given day, broken down by payment method.</p>
+      <ul>
+        <li>Filter by date and (admins only) by cashier</li>
+        <li>See subtotal, output VAT and total per payment type</li>
+        <li>Full receipt list below with links to individual receipts</li>
+      </ul>
+      <a class="btn-link" href="/takings">Go to Takings</a>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div class="help-section" id="section-reports">
+  <h2>Reports <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Date-Range Filtering</h3>
+      <p>Set a From and To date at the top of the Reports page to scope all four report sections.</p>
+      <a class="btn-link" href="/reports">Go to Reports</a>
+    </div>
+    <div class="help-card">
+      <h3>Sales Report</h3>
+      <ul>
+        <li>Units sold per product, gross revenue, output VAT, net revenue</li>
+        <li>Totals: receipt count, units, revenue, VAT</li>
+        <li>Export to CSV or Save &amp; Email</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Purchases Report</h3>
+      <ul>
+        <li>Units received per product per supplier</li>
+        <li>Amount ex-VAT, input VAT, total incl. VAT</li>
+        <li>Export to CSV or Save &amp; Email</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Stock Report (Period)</h3>
+      <ul>
+        <li>Opening stock (start of period), receipts, sales, closing stock</li>
+        <li>Values at cost price for opening and closing</li>
+        <li>Low-stock and negative-stock indicators</li>
+        <li>Export to CSV</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Cash Takings Report</h3>
+      <ul>
+        <li>Breakdown by payment method for the selected period</li>
+        <li>Receipt count, net, VAT, gross totals</li>
+        <li>% share of each payment method</li>
+        <li>Export to CSV or Save &amp; Email</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Save &amp; Email Reports</h3>
+      <p>Click <strong>Save &amp; Email</strong> on any report to:</p>
+      <ul>
+        <li>Save a timestamped CSV copy to the <code>reports/</code> folder on the server</li>
+        <li>Optionally email the CSV to any address</li>
+      </ul>
+      <p>Email must be configured in <strong>Email Settings</strong> first.</p>
+    </div>
+  </div>
+</div>
+
+<!-- VAT -->
+<div class="help-section" id="section-vat">
+  <h2>VAT Summary <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>VAT Calculation</h3>
+      <p>Mauritius VAT apportionment is applied automatically:</p>
+      <ul>
+        <li><strong>Output VAT</strong> — collected on Standard-rated sales</li>
+        <li><strong>Input VAT (raw)</strong> — paid on all purchases</li>
+        <li><strong>Apportionment ratio</strong> — taxable sales ÷ total sales</li>
+        <li><strong>Adjusted Input VAT</strong> — raw input VAT × apportionment ratio</li>
+        <li><strong>VAT Payable</strong> — Output VAT − Adjusted Input VAT</li>
+      </ul>
+      <a class="btn-link" href="/vat">Go to VAT</a>
+    </div>
+  </div>
+</div>
+
+<!-- BARCODES -->
+<div class="help-section" id="section-barcodes">
+  <h2>Barcodes <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Generating Barcodes</h3>
+      <p>A Code 128 barcode image is generated for every product based on its SKU.</p>
+      <ul>
+        <li>Go to <strong>Barcodes</strong> to see all products</li>
+        <li>Click <strong>Download</strong> to save a PNG barcode image for printing</li>
+      </ul>
+      <a class="btn-link" href="/barcodes">Go to Barcodes</a>
+    </div>
+    <div class="help-card">
+      <h3>Barcode Decoder</h3>
+      <p>Upload an image of a barcode to look up the product.</p>
+      <ul>
+        <li>Requires pyzbar library to be installed</li>
+        <li>Supports JPG, PNG, and most common image formats</li>
+        <li>Returns matching product name, category, and price</li>
+      </ul>
+      <a class="btn-link" href="/barcode-decoder">Go to Decoder</a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN SECTIONS -->
+{% if current_user.is_admin %}
+
+<!-- PHYSICAL STOCK -->
+<div class="help-section" id="section-physical-stock">
+  <h2>Physical Stock Take <span class="badge admin">Admin only</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Conducting a Count</h3>
+      <p>Enter the actual physical quantities counted in the warehouse/shop floor.</p>
+      <ul>
+        <li>Select the count date (defaults to today)</li>
+        <li>For each product, enter the physically counted quantity</li>
+        <li>Variance (Physical − Ledger) is calculated in real-time</li>
+        <li>Green = overage, Red = shortage</li>
+        <li>Add notes for any damaged or expired items</li>
+        <li>Click <strong>Save Stock Count</strong></li>
+      </ul>
+      <a class="btn-link" href="/physical-stock-take">Go to Stock Take</a>
+    </div>
+    <div class="help-card">
+      <h3>Stock Variance Report</h3>
+      <p>Compare physical counts against the system ledger for a specific date.</p>
+      <ul>
+        <li>Select a count date to see the variance analysis</li>
+        <li>Shows Overage / Shortage / Exact for each product</li>
+        <li>Total variance in quantity and value</li>
+        <li>Summary boxes for overages vs shortages</li>
+      </ul>
+      <a class="btn-link" href="/stock-variance">Go to Variance</a>
+    </div>
+  </div>
+  <div class="help-tip"><strong>Tip:</strong> Run a stock take at the end of each month and compare to the Stock Report to identify shrinkage or data-entry errors.</div>
+</div>
+
+<!-- DATABASE -->
+<div class="help-section" id="section-database">
+  <h2>Database Maintenance <span class="badge admin">Admin only</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Database Backup</h3>
+      <p>Creates a timestamped ZIP archive of the SQLite database.</p>
+      <ul>
+        <li>Click <strong>Download Backup</strong> to download the ZIP</li>
+        <li>Backups are also stored in the <code>backups/</code> folder on the server</li>
+        <li>An automated backup email is sent daily at 2:00 AM (if email is configured)</li>
+      </ul>
+      <a class="btn-link" href="/database-maintenance">Go to Maintenance</a>
+    </div>
+    <div class="help-card">
+      <h3>Purge Old Records</h3>
+      <p>Delete audit log entries older than a specified number of days to reduce database size.</p>
+      <ul>
+        <li>Default: records older than 365 days</li>
+        <li>Sales, purchases and stock data are <strong>never</strong> purged — only audit logs</li>
+        <li>A warning banner appears when the database exceeds 50 MB</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Size Warning</h3>
+      <p>A yellow warning banner appears on every page when the database file exceeds 50 MB. Click the banner to go directly to the maintenance page.</p>
+    </div>
+  </div>
+</div>
+
+<!-- USERS -->
+<div class="help-section" id="section-users">
+  <h2>User Management <span class="badge admin">Admin only</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Creating Users</h3>
+      <ul>
+        <li>Username must be unique</li>
+        <li>Password must be at least 6 characters</li>
+        <li>Tick <strong>Admin</strong> to grant admin access</li>
+        <li>Non-admin users are cashiers with limited access</li>
+      </ul>
+      <a class="btn-link" href="/users">Go to Users</a>
+    </div>
+    <div class="help-card">
+      <h3>Admin vs Cashier</h3>
+      <ul>
+        <li><strong>Cashier</strong> — Sales, Purchases, Stock, VAT, Float, Takings, Reports, Barcodes</li>
+        <li><strong>Admin</strong> — All cashier access + Product edit/delete, Users, Physical Stock, Database, Email Settings, Audit Logs</li>
+      </ul>
+    </div>
+    <div class="help-card">
+      <h3>Resetting Passwords &amp; Status</h3>
+      <ul>
+        <li>Admins can reset any user's password</li>
+        <li>Admins can enable/disable user accounts</li>
+        <li>At least one active admin must exist at all times</li>
+        <li>You cannot disable your own account</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIT LOGS -->
+<div class="help-section" id="section-audit">
+  <h2>Audit Logs <span class="badge admin">Admin only</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>What Is Logged</h3>
+      <p>All significant actions are logged automatically, including:</p>
+      <ul>
+        <li>User logins and logouts</li>
+        <li>Password changes and resets</li>
+        <li>User account creation, enable/disable</li>
+        <li>Physical stock counts</li>
+        <li>Database backups and purges</li>
+        <li>Email settings changes</li>
+        <li>Report saves</li>
+      </ul>
+      <a class="btn-link" href="/audit-logs">Go to Audit Logs</a>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL SETTINGS -->
+<div class="help-section" id="section-email">
+  <h2>Email Settings <span class="badge admin">Admin only</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Configuration</h3>
+      <p>Enter your SMTP email server details to enable email features.</p>
+      <ul>
+        <li><strong>SMTP Server</strong> — e.g. <code>smtp.gmail.com</code></li>
+        <li><strong>SMTP Port</strong> — typically <code>587</code> (TLS) or <code>465</code> (SSL)</li>
+        <li><strong>Sender Email</strong> — the address emails are sent from</li>
+        <li><strong>Password</strong> — use an App Password for Gmail (not your main password)</li>
+      </ul>
+      <a class="btn-link" href="/settings/email">Go to Email Settings</a>
+    </div>
+    <div class="help-card">
+      <h3>Automated Daily Backups</h3>
+      <p>Enter comma-separated recipient addresses in the <strong>Backup Recipients</strong> field. The system will email the database backup every day at 2:00 AM.</p>
+    </div>
+    <div class="help-card">
+      <h3>Gmail Setup</h3>
+      <ol style="font-size:.87rem;padding-left:18px;color:#444;line-height:1.8;">
+        <li>Enable 2-Step Verification on your Google account</li>
+        <li>Go to <strong>Google Account → Security → App Passwords</strong></li>
+        <li>Generate an app password for "Mail"</li>
+        <li>Use <code>smtp.gmail.com</code>, port <code>587</code></li>
+        <li>Paste the 16-character app password in the Password field</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<!-- Account -->
+<div class="help-section">
+  <h2>Your Account <span class="badge">All users</span></h2>
+  <div class="help-cards">
+    <div class="help-card">
+      <h3>Changing Your Password</h3>
+      <ul>
+        <li>Go to <strong>Account</strong> in the navigation</li>
+        <li>Enter your current password</li>
+        <li>Enter and confirm your new password (min. 6 characters)</li>
+      </ul>
+      <a class="btn-link" href="/account">Go to Account</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Scan / Add item to cart</h2>
+    <p class="muted">Use a USB/Bluetooth barcode reader in keyboard mode and scan into the first field.</p>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    {% if success %}<div class="success">{{ success }}</div>{% endif %}
+    <form method="post" action="{{ url_for('scan_sale') }}" class="form-grid" id="sale-form" novalidate>
+        <input id="barcode" name="barcode" placeholder="Scan barcode / type SKU" autocomplete="off" inputmode="none" value="{{ last_scanned or '' }}" autofocus>
+        <input id="sale-date" name="date" type="date" value="{{ today }}" title="Sale date" aria-label="Sale date">
+        <select name="product_id" title="Select product" aria-label="Select product">
+            <option value="">Select product manually (optional)</option>
+            {% for p in products %}
+            <option value="{{ p.id }}">{{ p.sku }} - {{ p.name }} (Rs {{ "%.2f"|format(p.selling_price) }})</option>
+            {% endfor %}
+        </select>
+        <input id="sale-qty" name="qty" type="number" min="1" value="1" placeholder="Quantity" required>
+        <button type="submit">Add to cart</button>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Current cart</h2>
+    {% if cart_rows %}
+    <div class="table-wrap">
+    <table>
+        <tr><th>SKU</th><th>Product</th><th>Brand</th><th>Size</th><th>Qty</th><th>Unit</th><th>Line total</th><th>VAT</th><th>Remove</th></tr>
+        {% for r in cart_rows %}
+        <tr>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.brand }}</td>
+            <td>{{ r.lodgement }}</td>
+            <td>{{ r.qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.unit_price) }}</td>
+            <td>Rs {{ "%.2f"|format(r.line_total) }}</td>
+            <td>Rs {{ "%.2f"|format(r.line_vat) }}</td>
+            <td>
+                <form method="post" class="form-inline" onsubmit="return confirm('Remove {{ r.name }} from cart?')">
+                    <input type="hidden" name="remove_product_id" value="{{ r.product_id }}">
+                    <button type="submit" name="action" value="remove" class="secondary-btn btn-xs">✕</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <p><strong>Cart subtotal:</strong> Rs {{ "%.2f"|format(cart_total) }} | <strong>Cart VAT:</strong> Rs {{ "%.2f"|format(cart_vat) }}</p>
+    <form method="post" class="action-row" id="finalize-form">
+        <input name="date" type="date" value="{{ today }}" title="Finalize date" aria-label="Finalize date">
+        <select name="customer_id" aria-label="Fidelity client" title="Fidelity client">
+            <option value="">Walk-in client</option>
+            {% for c in customers %}
+            <option value="{{ c.id }}">{{ c.loyalty_code }} - {{ c.full_name }} ({{ c.points_balance }} pts)</option>
+            {% endfor %}
+        </select>
+        <select name="payment_method" aria-label="Payment method" title="Payment method" required>
+            {% for pm in payment_methods %}
+            <option value="{{ pm }}">{{ pm }}</option>
+            {% endfor %}
+        </select>
+        <input id="amount-tendered" name="amount_tendered" type="number" step="0.01" min="0" placeholder="Money handed by client" aria-label="Money handed by client">
+        <output id="change-due" class="change-due">Change: Rs 0.00</output>
+        <input name="payment_reference" placeholder="Ref / last 4 digits (optional)" aria-label="Payment reference">
+        <button type="submit" name="action" value="finalize">Finalize and print receipt</button>
+        <button name="action" value="clear" class="secondary-btn" type="submit">Clear cart</button>
+    </form>
+    {% else %}
+    <p>Cart is empty.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <h2>Sales history</h2>
+    <a class="button-link" href="/export/sales">Export sales CSV</a>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Date</th><th>Receipt</th><th>Client</th><th>SKU</th><th>Product</th><th>Category</th><th>Qty</th><th>Total</th><th>VAT</th><th>Cashier</th></tr>
+        {% for r in rows %}
+        <tr>
+            <td>{{ r.date }}</td>
+            <td>
+                {% if r.receipt_id %}
+                <a href="/receipt/{{ r.receipt_id }}">#{{ r.receipt_id }}</a>
+                {% else %}
+                n/a
+                {% endif %}
+            </td>
+            <td>{{ r.customer_name or "Walk-in" }}</td>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.category }}</td>
+            <td>{{ r.qty }}</td>
+            <td>Rs {{ "%.2f"|format(r.total) }}</td>
+            <td>Rs {{ "%.2f"|format(r.output_vat) }}</td>
+            <td>{{ r.cashier_username or "n/a" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</section>
+
+<script>
+    const barcodeInput = document.getElementById("barcode");
+    const saleForm = document.getElementById("sale-form");
+    const saleQty = document.getElementById("sale-qty");
+    const finalizeForm = document.getElementById("finalize-form");
+    const paymentMethod = document.querySelector('select[name="payment_method"]');
+    const amountTendered = document.getElementById("amount-tendered");
+    const changeDue = document.getElementById("change-due");
+    const cartTotal = {{ "%.2f"|format(cart_total) }};
+
+    if (barcodeInput && saleForm) {
+        if ("scrollRestoration" in window.history) {
+            window.history.scrollRestoration = "manual";
+        }
+        function focusBarcode() {
+            barcodeInput.focus();
+            barcodeInput.select();
+        }
+
+        window.addEventListener("load", focusBarcode);
+
+        function submitScanForm(codeOverride) {
+            const code = (codeOverride || barcodeInput.value).trim();
+            if (!code) return;
+            barcodeInput.value = code;
+            if (saleQty && (!saleQty.value || Number.parseInt(saleQty.value, 10) < 1)) {
+                saleQty.value = "1";
+            }
+            saleForm.submit();
+        }
+
+        barcodeInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && barcodeInput.value.trim()) {
+                event.preventDefault();
+                submitScanForm();
+            }
+        });
+
+        let scanBuffer = "";
+        let lastScanKeyAt = 0;
+        const scanMaxGapMs = 200;
+
+        document.addEventListener("keydown", function (event) {
+            if (event.ctrlKey || event.altKey || event.metaKey) return;
+
+            const now = Date.now();
+            if (now - lastScanKeyAt > scanMaxGapMs) {
+                scanBuffer = "";
+            }
+            lastScanKeyAt = now;
+
+            if (event.key.length === 1) {
+                scanBuffer += event.key;
+                return;
+            }
+
+            if ((event.key === "Enter" || event.key === "Tab") && scanBuffer.trim().length >= 4) {
+                event.preventDefault();
+                event.stopPropagation();
+                submitScanForm(scanBuffer);
+                scanBuffer = "";
+                return;
+            }
+
+            if (event.key === "Enter" && document.activeElement !== barcodeInput) {
+                event.preventDefault();
+                focusBarcode();
+            }
+        }, true);
+
+        if (finalizeForm) {
+            finalizeForm.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && document.activeElement !== amountTendered) {
+                    event.preventDefault();
+                    focusBarcode();
+                }
+            });
+        }
+    }
+
+    function updateChangeDue() {
+        if (!paymentMethod || !amountTendered || !changeDue) return;
+        const isCash = paymentMethod.value === "Cash";
+        amountTendered.disabled = !isCash;
+        amountTendered.required = isCash;
+        if (!isCash) {
+            amountTendered.value = "";
+            changeDue.textContent = "Change: Rs 0.00";
+            changeDue.classList.remove("short");
+            return;
+        }
+        const handed = Number.parseFloat(amountTendered.value || "0");
+        const change = handed - cartTotal;
+        changeDue.textContent = (change < 0 ? "Short: Rs " : "Change: Rs ") + Math.abs(change).toFixed(2);
+        changeDue.classList.toggle("short", change < 0);
+    }
+
+    if (paymentMethod && amountTendered && changeDue) {
+        paymentMethod.addEventListener("change", updateChangeDue);
+        amountTendered.addEventListener("input", updateChangeDue);
+        updateChangeDue();
+    }
+</script>
+{% endblock %}

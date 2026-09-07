@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <h2>Daily Takings Report</h2>
+    
+    <form method="get" class="action-row" style="margin-bottom:20px;">
+        <label for="dt-from">From</label>
+        <input id="dt-from" name="from_date" type="date" value="{{ from_date }}" required>
+        <label for="dt-to">To</label>
+        <input id="dt-to" name="to_date" type="date" value="{{ to_date }}" required>
+        
+        <button type="submit">Apply filter</button>
+    </form>
+    
+    <p class="muted">Showing data from <strong>{{ from_date }}</strong> to <strong>{{ to_date }}</strong></p>
+</section>
+
+<section class="panel">
+    {% if daily_totals %}
+    <h2>Daily Summary</h2>
+    <div class="table-wrap" style="margin-bottom:20px;">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Total Receipts</th>
+                <th>Total Sales (incl. VAT)</th>
+                <th>Output VAT</th>
+                <th>Net Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for total in daily_totals %}
+        <tr style="background:#f5f5f5;font-weight:500;">
+            <td><strong>{{ total.date }}</strong></td>
+            <td>{{ total.total_receipts }}</td>
+            <td>Rs {{ "%.2f"|format(total.total_sales) }}</td>
+            <td>Rs {{ "%.2f"|format(total.total_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(total.total_subtotal) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <h2>Payment Methods Breakdown</h2>
+    {% if daily_takings %}
+    <div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Payment Method</th>
+                <th>Receipts</th>
+                <th>Amount (incl. VAT)</th>
+                <th>VAT</th>
+                <th>Net Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for taking in daily_takings %}
+        <tr>
+            <td>{{ taking.date }}</td>
+            <td>{{ taking.payment_method }}</td>
+            <td>{{ taking.receipt_count }}</td>
+            <td>Rs {{ "%.2f"|format(taking.total_amount) }}</td>
+            <td>Rs {{ "%.2f"|format(taking.total_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(taking.total_subtotal) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted">No takings in this period.</p>
+    {% endif %}
+    {% else %}
+    <p class="muted">No data available for the selected date range.</p>
+    {% endif %}
+</section>
+
+{% endblock %}

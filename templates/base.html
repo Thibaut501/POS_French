@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Mauritius POS V3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=dashboard-fit-20260713">
+</head>
+<body class="{{ 'dashboard-split-only' if current_user and request.path == '/' else '' }} {{ 'login-page' if request.path == '/login' else '' }}">
+{% if current_user %}
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="brand-block">
+            <div class="brand-mark">J</div>
+            <div>
+                <h1>JOSEA OUTSOURCING LTD</h1>
+                <p>Mauritius VAT + Stock</p>
+            </div>
+        </div>
+        <div class="user-card">
+            <div class="avatar">{{ current_user.full_name[:1] }}</div>
+            <div>
+                <strong>{{ current_user.full_name }}</strong>
+                <label class="background-picker" for="background-choice">
+                    <span>Background</span>
+                    <select id="background-choice" aria-label="Choose background color">
+                        <option value="white">White</option>
+                        <option value="black">Black</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                    </select>
+                </label>
+                <span>{{ current_user.username }} Â· Online</span>
+            </div>
+        </div>
+        <nav class="side-nav">
+            <span class="nav-section">Main</span>
+            {% if current_user.is_admin %}
+            <a class="{{ 'active' if request.path == '/' else '' }}" href="/">Dashboard</a>
+
+            <span class="nav-section nav-section-billing">Billing</span>
+            <a class="{{ 'active' if request.path.startswith('/sales') else '' }}" href="/sales">Sales / Invoices</a>
+            <a class="{{ 'active' if request.path.startswith('/fidelity') else '' }}" href="/fidelity">Fidelity Clients</a>
+            <a class="{{ 'active' if request.path.startswith('/vat') else '' }}" href="/vat">VAT</a>
+            <a href="/float">Float</a>
+            <a href="/takings">Takings</a>
+            <a href="/daily-sales">Daily Sales</a>
+            <a href="/daily-takings">Daily Takings</a>
+            <a href="/reports">Reports</a>
+            <a href="/billing">Subscription Billing</a>
+
+            <span class="nav-section nav-section-purchases">Purchases</span>
+            <a class="{{ 'active' if request.path.startswith('/products') else '' }}" href="/products">Products</a>
+            <a class="{{ 'active' if request.path.startswith('/categories') else '' }}" href="/categories">Categories</a>
+            <a class="{{ 'active' if request.path.startswith('/purchases') else '' }}" href="/purchases">Purchases / Stock In</a>
+            <a class="{{ 'active' if request.path.startswith('/stock') else '' }}" href="/stock">Stock</a>
+            <a href="/daily-purchases">Daily Purchases</a>
+            <a href="/physical-stock-take">Physical Stock</a>
+            <a href="/barcodes">Barcodes</a>
+            <a href="/barcode-decoder">Decode Barcode</a>
+
+            <span class="nav-section">System</span>
+            <a class="{{ 'active' if request.path.startswith('/account') else '' }}" href="/account">Account</a>
+            <a href="/users">Users</a>
+            <a href="/database-maintenance">Database</a>
+            <a class="{{ 'active' if request.path.startswith('/settings/receipt') else '' }}" href="/settings/receipt">Receipt Settings</a>
+            <a href="/settings/email">Email Settings</a>
+            <a href="/audit-logs">Audit Logs</a>
+            <a href="/license-status">License</a>
+            <a href="/help">Help</a>
+            {% else %}
+            <span class="nav-section nav-section-billing">Billing</span>
+            <a class="{{ 'active' if request.path.startswith('/sales') else '' }}" href="/sales">Sales / Invoices</a>
+            <a class="{{ 'active' if request.path.startswith('/fidelity') else '' }}" href="/fidelity">Fidelity Clients</a>
+            <a class="{{ 'active' if request.path.startswith('/float') else '' }}" href="/float">Float</a>
+            <a class="{{ 'active' if request.path.startswith('/takings') else '' }}" href="/takings">Takings</a>
+            <span class="nav-section nav-section-purchases">Purchases</span>
+            <a class="{{ 'active' if request.path.startswith('/stock') else '' }}" href="/stock">Stock</a>
+            {% endif %}
+            <span class="nav-section">System</span>
+            <a class="logout-link" href="/logout">Logout</a>
+        </nav>
+    </aside>
+    <div class="app-main">
+        <header class="topbar">
+            <div>
+                <button class="menu-button" type="button">â˜°</button>
+                <span class="topbar-title">Mauritius POS V3</span>
+            </div>
+            <div class="topbar-right">
+                <span>{{ now.strftime('%A, %d %B %Y') if now else '' }}</span>
+                <strong>{{ current_user.full_name }}</strong>
+                <label class="background-picker" for="background-choice">
+                    <span>Background</span>
+                    <select id="background-choice" aria-label="Choose background color">
+                        <option value="white">White</option>
+                        <option value="black">Black</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                    </select>
+                </label>
+                <a class="topbar-logout" href="/logout">Logout</a>
+            </div>
+        </header>
+        <main>
+{% else %}
+<header class="public-header">
+    <div>
+        <h1>JOSEA OUTSOURCING LTD</h1>
+        <p>Mauritius VAT + Stock</p>
+    </div>
+</header>
+<main>
+{% endif %}
+    {% if db_size_warning and current_user %}
+    <div class="notice-row notice-warning">
+        <span class="notice-icon">!</span>
+        <div>
+            <strong>Database size is {{ "%.1f"|format(db_size_mb) }} MB</strong> - consider <a href="/database-maintenance" class="notice-link">backing up or purging old logs</a>.
+        </div>
+    </div>
+    {% endif %}
+    {% if billing_enforced and subscription and current_user %}
+    {% set status = subscription.status|lower %}
+    {% if status in ['past_due', 'canceled', 'unpaid'] %}
+    <div class="notice-row notice-danger">
+        <strong>Billing status:</strong> {{ subscription.status }}
+        {% if subscription.grace_until %}<span>(grace until {{ subscription.grace_until }})</span>{% endif %}
+    </div>
+    {% endif %}
+    {% endif %}
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    {% block content %}{% endblock %}
+</main>
+{% if current_user %}
+        <footer class="site-footer">
+            <span>&copy; {{ now.year if now else '2026' }} Josea Outsourcing Ltd.</span>
+            <span class="footer-sep">|</span>
+            <a href="/terms">Terms</a>
+            <span class="footer-sep">|</span>
+            <a href="/privacy">Privacy</a>
+        </footer>
+    </div>
+</div>
+{% else %}
+<footer class="site-footer public-footer">
+    <span>&copy; {{ now.year if now else '2026' }} Josea Outsourcing Ltd. All rights reserved.</span>
+</footer>
+{% endif %}
+<script>
+    (function () {
+        var choice = document.getElementById('background-choice');
+        var savedBackground = localStorage.getItem('pos-background') || 'white';
+        var options = document.querySelectorAll('[data-background-choice]');
+        function setBackground(value) {
+            document.body.dataset.background = value;
+            localStorage.setItem('pos-background', value);
+            if (choice) choice.value = value;
+            options.forEach(function (option) {
+                option.classList.toggle('selected', option.dataset.backgroundChoice === value);
+            });
+        }
+        setBackground(savedBackground);
+        if (choice) choice.addEventListener('change', function () { setBackground(choice.value); });
+        options.forEach(function (option) {
+            option.addEventListener('click', function () { setBackground(option.dataset.backgroundChoice); });
+        });
+    }());
+</script>
+<script src="{{ url_for('static', filename='french-ui.js') }}?v=1"></script>
+</body>
+</html>
+

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="dashboard-hero">
+    <div>
+        <span class="eyebrow">Client fidelity</span>
+        <h2>Fidelity Clients</h2>
+        <p>Register clients, track points, and connect purchases to loyalty balances.</p>
+    </div>
+    <div class="hero-actions">
+        <span class="updated-pill">1 point per Rs {{ rupees_per_point }}</span>
+    </div>
+</section>
+
+<section class="grid">
+    <div class="card accent-red">
+        <span>Total clients</span>
+        <strong>{{ totals.customer_count }}</strong>
+        <small>{{ totals.active_count }} active</small>
+    </div>
+    <div class="card accent-green">
+        <span>Points outstanding</span>
+        <strong>{{ points_total }}</strong>
+        <small>Across all clients</small>
+    </div>
+    <div class="card accent-blue">
+        <span>Receipts linked</span>
+        <strong>{{ customers | sum(attribute='receipt_count') }}</strong>
+        <small>Fidelity purchases</small>
+    </div>
+    <div class="card accent-purple">
+        <span>Total spend</span>
+        <strong>Rs {{ "%.2f"|format(customers | sum(attribute='total_spent')) }}</strong>
+        <small>Linked to clients</small>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Add client</h2>
+    <form method="post" class="form-grid">
+        <input type="hidden" name="action" value="create_customer">
+        <input name="full_name" placeholder="Client full name" required>
+        <input name="phone" placeholder="Phone">
+        <input name="email" type="email" placeholder="Email">
+        <input name="loyalty_code" placeholder="Fidelity code (auto if blank)">
+        <input name="address" placeholder="Address">
+        <input name="notes" placeholder="Notes">
+        <button type="submit">Create client</button>
+    </form>
+</section>
+
+{% if current_user.is_admin %}
+<section class="panel">
+    <h2>Fidelity point setting</h2>
+    <p class="muted">Current rule: clients earn 1 point for every Rs {{ rupees_per_point }} on finalized receipts.</p>
+    <form method="post" class="action-row">
+        <input type="hidden" name="action" value="update_settings">
+        <label for="rupees-per-point">Rupees per point</label>
+        <input id="rupees-per-point" name="rupees_per_point" type="number" min="1" value="{{ rupees_per_point }}" required>
+        <button type="submit">Save setting</button>
+    </form>
+</section>
+{% endif %}
+
+<section class="panel">
+    <div class="panel-head">
+        <div>
+            <h2>Clients</h2>
+            <p class="muted">Choose a client at checkout to award points automatically.</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <tr>
+                <th>Code</th><th>Client</th><th>Contact</th><th>Points</th><th>Receipts</th><th>Total spend</th><th>Status</th><th>Adjust</th><th>Action</th>
+            </tr>
+            {% for c in customers %}
+            <tr>
+                <td>{{ c.loyalty_code }}</td>
+                <td>
+                    <strong>{{ c.full_name }}</strong>
+                    {% if c.notes %}<div class="muted">{{ c.notes }}</div>{% endif %}
+                </td>
+                <td>
+                    {% if c.phone %}{{ c.phone }}<br>{% endif %}
+                    {% if c.email %}{{ c.email }}{% endif %}
+                </td>
+                <td><span class="badge secondary">{{ c.points_balance }} pts</span></td>
+                <td>{{ c.receipt_count }}</td>
+                <td>Rs {{ "%.2f"|format(c.total_spent) }}</td>
+                <td>
+                    {% if c.is_active %}
+                    <span class="badge success">Active</span>
+                    {% else %}
+                    <span class="badge danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" class="fidelity-adjust-form">
+                        <input type="hidden" name="action" value="adjust_points">
+                        <input type="hidden" name="customer_id" value="{{ c.id }}">
+                        <input name="points" type="number" placeholder="+/- pts" required>
+                        <input name="reason" placeholder="Reason">
+                        <button type="submit" class="secondary-btn btn-xs">Save</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" class="form-inline">
+                        <input type="hidden" name="action" value="toggle_customer">
+                        <input type="hidden" name="customer_id" value="{{ c.id }}">
+                        <input type="hidden" name="is_active" value="{{ 0 if c.is_active else 1 }}">
+                        <button type="submit" class="btn-xs">{{ "Deactivate" if c.is_active else "Activate" }}</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if customers|length == 0 %}
+            <tr><td colspan="9" class="empty-table">No fidelity clients yet.</td></tr>
+            {% endif %}
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Point history</h2>
+    <div class="table-wrap">
+        <table>
+            <tr><th>Date</th><th>Client</th><th>Points</th><th>Reason</th><th>Receipt</th><th>User</th></tr>
+            {% for t in transactions %}
+            <tr>
+                <td>{{ t.transaction_date }}</td>
+                <td>{{ t.loyalty_code }} - {{ t.full_name }}</td>
+                <td class="{{ 'diff-positive' if t.points > 0 else 'diff-negative' }}">{{ t.points }}</td>
+                <td>{{ t.reason }}</td>
+                <td>{% if t.receipt_id %}<a href="/receipt/{{ t.receipt_id }}">#{{ t.receipt_id }}</a>{% else %}n/a{% endif %}</td>
+                <td>{{ t.created_by or "n/a" }}</td>
+            </tr>
+            {% endfor %}
+            {% if transactions|length == 0 %}
+            <tr><td colspan="6" class="empty-table">No point history yet.</td></tr>
+            {% endif %}
+        </table>
+    </div>
+</section>
+{% endblock %}

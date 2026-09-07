@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Daily Takings Report</h2>
+
+    <form method="get" class="action-row" style="margin-bottom:16px;">
+        <label for="t-date">Date</label>
+        <input id="t-date" name="date" type="date" value="{{ date_filter }}" required>
+        {% if current_user.is_admin %}
+        <label for="t-cashier">Cashier</label>
+        <select id="t-cashier" name="cashier_id" aria-label="Cashier">
+            <option value="">All cashiers</option>
+            {% for c in cashiers %}
+            <option value="{{ c.id }}" {% if cashier_filter == c.id|string %}selected{% endif %}>{{ c.full_name }} ({{ c.username }})</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+        <button type="submit">View report</button>
+    </form>
+
+    <div class="grand-box">
+        <div>
+            <div class="g-label">Total receipts</div>
+            <div class="g-val">{{ grand.receipt_count }}</div>
+        </div>
+        <div>
+            <div class="g-label">Gross takings (incl. VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(grand.grand_total) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Output VAT collected</div>
+            <div class="g-val">Rs {{ "%.2f"|format(grand.grand_vat) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Net sales (ex-VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(grand.grand_subtotal - grand.grand_vat) }}</div>
+        </div>
+    </div>
+
+    {% set diff = banking_summary.cash_difference %}
+    <div class="float-diff-box {% if diff > 0.005 %}over{% elif diff < -0.005 %}under{% else %}exact{% endif %}">
+        <strong>Banking Reconciliation</strong><br>
+        Opening float: Rs {{ "%.2f"|format(banking_summary.opening_float_total) }} &nbsp;+&nbsp;
+        Cash sales: Rs {{ "%.2f"|format(banking_summary.cash_sales_total) }}<br>
+        Expected cash in drawer: <strong>Rs {{ "%.2f"|format(banking_summary.expected_cash_total) }}</strong> &nbsp;|&nbsp;
+        Actual cash counted: <strong>Rs {{ "%.2f"|format(banking_summary.closing_float_total) }}</strong><br>
+        Cash to bank after keeping opening float: <strong>Rs {{ "%.2f"|format(banking_summary.cash_to_bank) }}</strong><br>
+        Credit cards: Rs {{ "%.2f"|format(banking_summary.card_total) }} &nbsp;|&nbsp;
+        Digital/mobile: Rs {{ "%.2f"|format(banking_summary.digital_total) }} &nbsp;|&nbsp;
+        Other: Rs {{ "%.2f"|format(banking_summary.other_total) }}<br>
+        {% if diff > 0.005 %}
+            <strong>Overage: Rs {{ "%.2f"|format(diff) }}</strong>
+        {% elif diff < -0.005 %}
+            <strong>Shortage: Rs {{ "%.2f"|format(diff|abs) }}</strong>
+        {% else %}
+            <strong>Drawer balanced</strong>
+        {% endif %}
+    </div>
+
+    {% if float_sessions %}
+    <h3>Float sessions</h3>
+    <div class="table-wrap" style="margin-bottom:16px;">
+    <table>
+        <thead>
+            <tr><th>Cashier</th><th>Opened</th><th>Opening</th><th>Closed</th><th>Closing</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        {% for f in float_sessions %}
+        <tr>
+            <td>{{ f.full_name }} ({{ f.username }})</td>
+            <td>{{ f.opened_at }}</td>
+            <td>Rs {{ "%.2f"|format(f.opening_float) }}</td>
+            <td>{{ f.closed_at or 'Open' }}</td>
+            <td>{% if f.closing_float is not none %}Rs {{ "%.2f"|format(f.closing_float) }}{% else %}-{% endif %}</td>
+            <td>{% if f.closing_float is none %}<span class="float-status-open">Open</span>{% else %}<span class="float-status-closed">Closed</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <div class="float-closed-box">No float session recorded for this date/cashier.</div>
+    {% endif %}
+
+    {% if closing_denomination_rows | sum(attribute='count') > 0 %}
+    <h3>Cash denomination counted</h3>
+    <div class="table-wrap" style="margin-bottom:16px;">
+    <table>
+        <thead>
+            <tr><th>Denomination</th><th>Count</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+        {% for d in closing_denomination_rows if d.count > 0 %}
+        <tr>
+            <td>{{ d.label }}</td>
+            <td>{{ d.count }}</td>
+            <td>Rs {{ "%.2f"|format(d.total) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+
+    <h3>Breakdown by payment method</h3>
+    {% if payment_summary %}
+    <div class="takings-grid">
+        {% for row in payment_summary %}
+        <div class="takings-card">
+            <div class="pm-name">{{ row.payment_method }}</div>
+            <div class="pm-total">Rs {{ "%.2f"|format(row.total_amount) }}</div>
+            <div class="pm-sub">{{ row.receipt_count }} receipt(s) &nbsp;|&nbsp; VAT Rs {{ "%.2f"|format(row.total_vat) }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No sales recorded for this date.</p>
+    {% endif %}
+
+    <h3>Receipts for {{ date_filter }}</h3>
+    {% if receipts %}
+    <div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Receipt #</th>
+                <th>Cashier</th>
+                <th>Payment method</th>
+                <th>Reference</th>
+                <th>Subtotal</th>
+                <th>VAT</th>
+                <th>Total</th>
+                <th>Cash received</th>
+                <th>Change</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in receipts %}
+        <tr>
+            <td><a href="/receipt/{{ r.id }}">#{{ r.id }}</a></td>
+            <td>{{ r.full_name }} ({{ r.username }})</td>
+            <td>{{ r.payment_method }}</td>
+            <td>{{ r.payment_reference or '-' }}</td>
+            <td>Rs {{ "%.2f"|format(r.subtotal - r.output_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.output_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total) }}</td>
+            <td>{% if r.payment_method == 'Cash' %}Rs {{ "%.2f"|format(r.amount_tendered) }}{% else %}-{% endif %}</td>
+            <td>{% if r.payment_method == 'Cash' %}Rs {{ "%.2f"|format(r.change_due) }}{% else %}-{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted">No receipts found.</p>
+    {% endif %}
+</section>
+{% endblock %}

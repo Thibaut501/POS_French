@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h2>Daily Takings Report</h2>
+
+    {# Filter form #}
+    <form method="get" class="action-row" style="margin-bottom:16px;">
+        <label for="t-date">Date</label>
+        <input id="t-date" name="date" type="date" value="{{ date_filter }}" required>
+        {% if current_user.is_admin %}
+        <label for="t-cashier">Cashier</label>
+        <select id="t-cashier" name="cashier_id" aria-label="Cashier">
+            <option value="">All cashiers</option>
+            {% for c in cashiers %}
+            <option value="{{ c.id }}" {% if cashier_filter == c.id|string %}selected{% endif %}>{{ c.full_name }} ({{ c.username }})</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+        <button type="submit">View report</button>
+    </form>
+
+    {# Grand total banner #}
+    <div class="grand-box">
+        <div>
+            <div class="g-label">Total receipts</div>
+            <div class="g-val">{{ grand.receipt_count }}</div>
+        </div>
+        <div>
+            <div class="g-label">Gross takings (incl. VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(grand.grand_total) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Output VAT collected</div>
+            <div class="g-val">Rs {{ "%.2f"|format(grand.grand_vat) }}</div>
+        </div>
+        <div>
+            <div class="g-label">Net sales (ex-VAT)</div>
+            <div class="g-val">Rs {{ "%.2f"|format(grand.grand_subtotal - grand.grand_vat) }}</div>
+        </div>
+    </div>
+
+    {# Float reconciliation #}
+    {% if float_session %}
+        {% if float_session.closing_float is not none %}
+            {% set expected_cash = float_session.opening_float + (payment_summary | selectattr('payment_method', 'equalto', 'Cash') | map(attribute='total_amount') | list | first | default(0)) %}
+            {% set diff = float_session.closing_float - expected_cash %}
+            <div class="float-diff-box {% if diff > 0.005 %}over{% elif diff < -0.005 %}under{% else %}exact{% endif %}">
+                <strong>Float Reconciliation</strong><br>
+                Opening float: Rs {{ "%.2f"|format(float_session.opening_float) }} &nbsp;+&nbsp;
+                Cash sales: Rs {{ "%.2f"|format((payment_summary | selectattr('payment_method', 'equalto', 'Cash') | map(attribute='total_amount') | list | first) | default(0)) }}<br>
+                Expected cash in drawer: <strong>Rs {{ "%.2f"|format(expected_cash) }}</strong> &nbsp;|&nbsp;
+                Actual closing float: <strong>Rs {{ "%.2f"|format(float_session.closing_float) }}</strong><br>
+                {% if diff > 0.005 %}
+                    <strong>Overage: Rs {{ "%.2f"|format(diff) }}</strong>
+                {% elif diff < -0.005 %}
+                    <strong>Shortage: Rs {{ "%.2f"|format(diff|abs) }}</strong>
+                {% else %}
+                    <strong>✔ Exact — drawer balanced</strong>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="float-open-box">
+                <strong>Float session is still open.</strong> Close the float to see full reconciliation.
+                Opening float: Rs {{ "%.2f"|format(float_session.opening_float) }}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="float-closed-box">No float session recorded for this date/cashier.</div>
+    {% endif %}
+
+    {# Breakdown by payment method #}
+    <h3>Breakdown by payment method</h3>
+    {% if payment_summary %}
+    <div class="takings-grid">
+        {% for row in payment_summary %}
+        <div class="takings-card">
+            <div class="pm-name">{{ row.payment_method }}</div>
+            <div class="pm-total">Rs {{ "%.2f"|format(row.total_amount) }}</div>
+            <div class="pm-sub">{{ row.receipt_count }} receipt(s) &nbsp;|&nbsp; VAT Rs {{ "%.2f"|format(row.total_vat) }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No sales recorded for this date.</p>
+    {% endif %}
+
+    {# Receipt list #}
+    <h3>Receipts for {{ date_filter }}</h3>
+    {% if receipts %}
+    <div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Receipt #</th>
+                <th>Cashier</th>
+                <th>Payment method</th>
+                <th>Reference</th>
+                <th>Subtotal</th>
+                <th>VAT</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in receipts %}
+        <tr>
+            <td><a href="/receipt/{{ r.id }}">#{{ r.id }}</a></td>
+            <td>{{ r.full_name }} ({{ r.username }})</td>
+            <td>{{ r.payment_method }}</td>
+            <td>{{ r.payment_reference or '—' }}</td>
+            <td>Rs {{ "%.2f"|format(r.subtotal - r.output_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.output_vat) }}</td>
+            <td>Rs {{ "%.2f"|format(r.total) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p class="muted">No receipts found.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="panel">
+    <h2>Physical Stock Count</h2>
+    <p class="muted">Compare physical quantities and values against the stock ledger. Variances (shortages/overages) are calculated automatically.</p>
+
+    {% if error %}<div class="error" style="margin-bottom:12px;">{{ error }}</div>{% endif %}
+    {% if success %}<div class="success" style="margin-bottom:12px;">✓ {{ success }}</div>{% endif %}
+
+    <form method="post" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+            <label for="count-date">Count date:</label>
+            <input id="count-date" name="count_date" type="date" value="{{ today }}" required>
+            <button type="submit" name="action" value="save">Save Physical Counts</button>
+            {% if current_user.is_admin %}
+            <a class="button-link" href="/stock-variance?date={{ today }}">📊 View Variance Report</a>
+            {% endif %}
+        </div>
+
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Cost Price</th>
+                    <th colspan="2">Stock Ledger</th>
+                    <th colspan="2">Physical Count</th>
+                    <th colspan="2">Variance</th>
+                    <th>Notes</th>
+                </tr>
+                <tr style="background:#f5f5f5;">
+                    <th colspan="4"></th>
+                    <th>Qty</th>
+                    <th>Value</th>
+                    <th>Qty</th>
+                    <th>Value</th>
+                    <th>Qty</th>
+                    <th>Value</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in products %}
+            <tr>
+                <td>{{ p.sku }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.category }}</td>
+                <td>Rs {{ "%.2f"|format(p.cost_price) }}</td>
+                <td style="text-align:center;font-weight:bold;">{{ p.ledger_qty }}</td>
+                <td style="text-align:right;">Rs {{ "%.2f"|format(p.ledger_value) }}</td>
+                <td>
+                    <input type="number" name="qty_{{ p.id }}" placeholder="Physical qty" 
+                           value="{% if p.physical_qty is not none %}{{ p.physical_qty }}{% endif %}"
+                           style="width:80px;text-align:center;"
+                           onchange="updateVariance(this, {{ p.ledger_qty }}, {{ p.cost_price }})">
+                </td>
+                <td style="text-align:right;">
+                    <span id="phys-value-{{ p.id }}">
+                        {% if p.physical_value is not none %}Rs {{ "%.2f"|format(p.physical_value) }}{% else %}—{% endif %}
+                    </span>
+                </td>
+                <td style="text-align:center;{% if p.variance_qty and p.variance_qty > 0 %}color:green;{% elif p.variance_qty and p.variance_qty < 0 %}color:red;{% endif %}">
+                    <span id="var-qty-{{ p.id }}">
+                        {% if p.variance_qty is not none %}{% if p.variance_qty > 0 %}+{% endif %}{{ p.variance_qty }}{% else %}—{% endif %}
+                    </span>
+                </td>
+                <td style="text-align:right;{% if p.variance_value and p.variance_value > 0 %}color:green;{% elif p.variance_value and p.variance_value < 0 %}color:red;{% endif %}">
+                    <span id="var-value-{{ p.id }}">
+                        {% if p.variance_value is not none %}{% if p.variance_value > 0 %}+{% endif %}Rs {{ "%.2f"|format(p.variance_value | abs) }}{% else %}—{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <input type="text" name="notes_{{ p.id }}" placeholder="e.g. Damaged..." 
+                           value="{{ p.notes }}"
+                           style="width:120px;">
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+
+        <div style="margin-top:16px;">
+            <button type="submit">Save Physical Counts</button>
+            <a class="button-link" href="/reports">Cancel</a>
+        </div>
+    </form>
+</section>
+
+<script>
+function updateVariance(input, ledgerQty, costPrice) {
+    const physicalQty = parseInt(input.value) || 0;
+    const productId = input.name.replace('qty_', '');
+    
+    const varianceQty = physicalQty - ledgerQty;
+    const varianceValue = varianceQty * costPrice;
+    const physicalValue = physicalQty * costPrice;
+    
+    // Update physical value
+    const physValueSpan = document.getElementById(`phys-value-${productId}`);
+    physValueSpan.textContent = `Rs ${physicalValue.toFixed(2)}`;
+    
+    // Update variance qty
+    const varQtySpan = document.getElementById(`var-qty-${productId}`);
+    varQtySpan.textContent = (varianceQty > 0 ? '+' : '') + varianceQty;
+    varQtySpan.style.color = varianceQty > 0 ? 'green' : varianceQty < 0 ? 'red' : 'black';
+    
+    // Update variance value
+    const varValueSpan = document.getElementById(`var-value-${productId}`);
+    varValueSpan.textContent = (varianceValue > 0 ? '+' : varianceValue < 0 ? '-' : '') + 
+                               'Rs ' + Math.abs(varianceValue).toFixed(2);
+    varValueSpan.style.color = varianceValue > 0 ? 'green' : varianceValue < 0 ? 'red' : 'black';
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Receipt #{{ receipt.id }}</title>
+<style>
+@page { size: 58mm auto; margin: 0; }
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #eef1f5;
+    color: #000;
+    font-family: Consolas, "Courier New", monospace;
+}
+.receipt-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    box-sizing: border-box;
+}
+.receipt-paper {
+    width: 58mm;
+    background: #fff;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
+    border: 1px solid #d5d9e2;
+}
+.receipt-wrap {
+    width: 58mm;
+    padding: 3mm 2.4mm 3.5mm;
+    box-sizing: border-box;
+    font-size: 10.5px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+.center { text-align: center; }
+.line { border-top: 1px dashed #000; margin: 4px 0; }
+.strong-line { border-top: 2px solid #000; margin: 5px 0 4px; }
+.fiscal-title { font-size: 12px; font-weight: 900; margin: 0 0 1px; }
+.invoice-label { font-size: 9px; margin: 0; }
+.invoice-no { font-size: 9.5px; margin: 1px 0 3px; overflow-wrap: anywhere; }
+.qr-preview {
+    --cell: 3px;
+    display: grid;
+    grid-template-columns: repeat(25, var(--cell));
+    grid-auto-rows: var(--cell);
+    width: calc(25 * var(--cell));
+    margin: 4px auto 5px;
+    padding: 2px;
+    background: #fff;
+    border: 1px solid #000;
+}
+.qr-preview span.on { background: #000; }
+.shop-name { margin: 2px 0; font-size: 11.5px; font-weight: 900; text-transform: uppercase; }
+.meta { margin: 1px 0; font-size: 9px; }
+.vat-title {
+    display: inline-block;
+    margin: 4px 0 1px;
+    padding: 1px 6px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    font-size: 10.5px;
+    font-weight: 900;
+}
+.row { display: flex; justify-content: space-between; gap: 5px; }
+.row span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.row span:last-child { text-align: right; white-space: nowrap; }
+.section-title {
+    margin: 0 0 3px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0;
+}
+.items-head { font-size: 9px; font-weight: 900; }
+.item {
+    padding: 3px 0;
+    border-top: 1px dotted #000;
+}
+.item-name { text-transform: uppercase; overflow-wrap: anywhere; font-size: 10px; font-weight: 900; }
+.item-sku { font-size: 8.5px; margin-top: 1px; overflow-wrap: anywhere; }
+.item-line { display: flex; justify-content: space-between; gap: 5px; font-size: 9px; }
+.item-line.total-line { margin-top: 1px; font-size: 9.5px; font-weight: 900; }
+.item-amount { white-space: nowrap; text-align: right; }
+.totals { margin-top: 1px; }
+.total {
+    margin-top: 2px;
+    padding-top: 2px;
+    border-top: 2px solid #000;
+    font-size: 12px;
+    font-weight: 900;
+}
+.tax-note { font-size: 8.5px; margin-top: 5px; }
+.footer { margin-top: 6px; font-size: 9px; font-weight: 900; }
+.footer p { margin: 1px 0; }
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.print-form { display: inline; }
+.print-message { width: 100%; margin: 0 0 2px; font: 600 13px Arial, sans-serif; text-align: center; }
+.print-message.ok { color: #15803d; }
+.print-message.error { color: #b91c1c; }
+button, a {
+    min-width: 104px;
+    padding: 9px 12px;
+    background: #b91c1c;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    font: 700 13px Arial, sans-serif;
+    text-align: center;
+    cursor: pointer;
+}
+.secondary { background: #334155; }
+.back-link { background: #475569; }
+@media print {
+    html, body {
+        width: 58mm;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+    }
+    .receipt-screen {
+        display: block;
+        min-height: 0;
+        padding: 0;
+    }
+    .receipt-paper {
+        width: 58mm;
+        border: 0;
+        box-shadow: none;
+    }
+    .receipt-wrap { width: 58mm; }
+    .no-print { display: none !important; }
+}
+</style>
+</head>
+<body>
+<main class="receipt-screen">
+    <section class="receipt-paper">
+        <div class="receipt-wrap">
+            <div class="center">
+                <p class="fiscal-title">MRA Fiscalised</p>
+                <p class="invoice-label">MRA Invoice Number:</p>
+                <p class="invoice-no">{{ summary.invoice_number }}</p>
+                <div class="qr-preview" aria-label="MRA QR preview">
+                    {% for row in summary.qr_matrix %}{% for cell in row %}<span class="{{ 'on' if cell else '' }}"></span>{% endfor %}{% endfor %}
+                </div>
+                <p class="shop-name">{{ summary.business_name }}</p>
+                {% if summary.business_line_1 %}<p class="meta">{{ summary.business_line_1 }}</p>{% endif %}
+                {% if summary.business_line_2 %}<p class="meta">{{ summary.business_line_2 }}</p>{% endif %}
+                {% if summary.tel %}<p class="meta">TEL: {{ summary.tel }}</p>{% endif %}
+                <p class="meta">VAT REG. NO {{ summary.vat_reg_no }}</p>
+                <p class="meta">BRN: {{ summary.brn }}</p>
+                <p class="vat-title">VAT INVOICE</p>
+            </div>
+
+            <div class="line"></div>
+            <div class="row meta"><span>{{ summary.display_datetime }}</span><span>{{ receipt.username }}</span></div>
+            <div class="line"></div>
+            <p class="section-title">ITEMS</p>
+            <div class="row items-head"><span>Description</span><span>Total</span></div>
+
+            {% for item in summary["items"] %}
+            <div class="item">
+                <div class="item-name">{{ item.name }}</div>
+                {% if item.sku %}<div class="item-sku">SKU: {{ item.sku }}</div>{% endif %}
+                <div class="item-line">
+                    <span>Qty {{ item.qty }}</span>
+                    <span class="item-amount">Unit Rs{{ "%.2f"|format(item.unit_price) }}</span>
+                </div>
+                <div class="item-line total-line">
+                    <span>Line total</span>
+                    <span class="item-amount">Rs{{ "%.2f"|format(item.total) }} {{ item.tax_code }}</span>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="strong-line"></div>
+            <div class="totals">
+                <div class="row"><span>SUB TOTAL</span><span>Rs {{ "%.2f"|format(receipt.total) }}</span></div>
+                <div class="row"><span>VAT 15% ({{ "%.2f"|format(summary.standard_base) }})</span><span>Rs {{ "%.2f"|format(summary.standard_vat) }}</span></div>
+                <div class="row"><span>VAT EXEMPT ({{ "%.2f"|format(summary.exempt_total) }})</span><span>Rs 0.00</span></div>
+                <div class="row"><span>VAT ZERO ({{ "%.2f"|format(summary.zero_total) }})</span><span>Rs 0.00</span></div>
+                <div class="row total"><span>TOTAL</span><span>Rs {{ "%.2f"|format(receipt.total) }}</span></div>
+            </div>
+
+            {% if receipt.payment_method == 'Cash' %}
+            <div class="row"><span>Cash</span><span>Rs {{ "%.2f"|format(receipt.amount_tendered) }}</span></div>
+            <div class="row"><span>Change</span><span>Rs {{ "%.2f"|format(receipt.change_due) }}</span></div>
+            {% else %}
+            <div class="row"><span>Payment</span><span>{{ receipt.payment_method }}</span></div>
+            {% endif %}
+            <div class="line"></div>
+            <div class="row meta"><span>Item count: {{ "%g"|format(summary.item_count) }}</span><span></span></div>
+            <div class="row meta"><span>Trans: {{ summary.transaction_id }}</span><span>Terminal: {{ summary.terminal_id }}</span></div>
+
+            <div class="tax-note center">
+                Vat 15%=Tv&nbsp;&nbsp; Vat Exempt=Te&nbsp;&nbsp; Vat Zero=Tz
+            </div>
+            <div class="footer center">
+                <p>***POUR MIEUX VOUS SERVIR***</p>
+                <p>***MERCI DE VOTRE VISITE***</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="actions no-print">
+        {% if request.args.get('print_status') == 'sent' %}
+        <p class="print-message ok">Sent to E-PoS printer.</p>
+        {% endif %}
+        {% if request.args.get('print_error') %}
+        <p class="print-message error">{{ request.args.get('print_error') }}</p>
+        {% endif %}
+        <form class="print-form" method="post" action="{{ url_for('print_receipt', receipt_id=receipt.id) }}">
+            <button type="submit">Print Receipt</button>
+        </form>
+        <button type="button" class="secondary" onclick="window.print()">Browser Print</button>
+        <a class="back-link" href="/sales">Back</a>
+    </div>
+</main>
+</body>
+</html>
